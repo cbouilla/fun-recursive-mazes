@@ -17,7 +17,10 @@ def flatten(path):
 
 def path_to_string(path):
 	if type(path) is str:
-		return path if path != "inner.start" else "START"
+		block = ""
+		if path.find(".") > -1:
+			block, element = path.split(".")
+		return path if block != "inner" else element.upper()
 	if len(path) == 3:
 		center = path[1]
 	else:
@@ -42,6 +45,7 @@ def load_maze(maze):
 def get_block_exits(paths):
 	"""Lists all existing exits by block."""
 	entries = {}
+	trophies = False
 	for a,b in paths:
 		if a.find(".") > -1:
 			block, exit = a.split(".")
@@ -49,13 +53,19 @@ def get_block_exits(paths):
 				if block not in entries:
 					entries[block] = set()
 				entries[block].add(exit)
+			else:
+				if exit != "start":
+					trophies = True
 		if b.find(".") > -1:
 			block, exit = b.split(".")
 			if block != "inner":
 				if block not in entries:
 					entries[block] = set()
 				entries[block].add(exit)
-	return entries
+			else:
+				if exit != "start":
+					trophies = True
+	return entries, trophies
 
 def unique_no_loop(iterable):
     "Lists unique paths that are not loops."
@@ -77,14 +87,23 @@ def self_connected_block(path):
 			bloc_2, _ = path[-1].split(".")
 	return bloc_1 == bloc_2
 
-def start_exit(path):
+def start_exit(paths, trophies):
 	"""Filters paths between the starting point and an exit, that is correct solutions of the maze."""
-	if path[-1] == "inner.start":
-		path = reverse_path(path)
-	return path[0] == "inner.start" and path[-1].find(".") == -1
+	for path in paths:
+		if path[-1] == "inner.start":
+			path = reverse_path(path)
+		if path[0] == "inner.start":
+			if not trophies and path[-1].find(".") == -1 :
+					yield path
+			elif trophies and path[-1].find(".") != -1:
+				block, _ = path[-1].split(".")
+				if block == "inner":
+					yield path
+
+
 
 def solve(maze, to_depth=0):
-	new_paths, exits = load_maze(maze)
+	new_paths, (exits, has_trophies) = load_maze(maze)
 	paths = set()
 	known_paths = set(filter(self_connected_block, paths))
 	candidates = set()
@@ -93,7 +112,7 @@ def solve(maze, to_depth=0):
 		paths.update(new_paths)
 		known_paths.update(candidates)
 
-		solutions = set(filter(start_exit, paths))
+		solutions = set(start_exit(paths, has_trophies))
 		if len(solutions) > 0 and depth >= to_depth:
 			return solutions
 
