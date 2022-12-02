@@ -1,0 +1,169 @@
+specifications for Fractal labyrinths
+=====================================
+
+Each interesting location has a name "start", "goal", "1", "2", ... the
+labyrinth contain recursive copies of itself, and each copy has an identifier ("A", "B", "C", "X"...) 
+
+Some locations are on the outer face of the labyrinth. These locations have NO
+DOT in their name. Some of these locations also appear on the border on
+the "inner" boxes, and they are called BOXID.locid (with a dot).
+
+Also some locations are "internal" (the starting point in "Alice"). We name
+them "internal.start" for instance (with a dot).
+
+So the convention is "no dot == location on the outer face".
+
+For instance, the Infinite labyrinth :
+
++----------------------------------------------+
+|                                              |
+|       +------------------------------+       |
+|       |                              |       |
+a-----X.a               X              X.b-----b
+|       |                              |       |
+|       +------------------------------+       |
+|                                              |
++----------------------------------------------+
+
+Has two outer locations 'a' and 'b', and a single recursive copy 'X', where
+the same two locations appear as 'X.a' and 'X.b'.
+
+The labyrinth is entirely described by the adjacency graph of these locations,
+the starting point, and the goal. For instance, the above labyrinth can be
+described by the two edges: a -- X.a b -- X.b
+
+I suggest a dumb file format:
+##########################################################
+a X.a
+b X.b
+###########################################################
+
+Each line describes a clique in the adjacency graph (all locations in the same line are connected). This does not describe the starting point nor the victory condition.
+
+For the "Alice" labyrinth, this gives:
+####################
+inner.start A.3
+1 12 A.12 A.5
+2 8 10 A.9 C.4
+3 B.1 B.4
+4 B.5 B.6
+5 D.4 D.5
+6 D.8
+7 D.10 B.7
+9 C.7 C.11
+11 A.10
+B.11 B.12
+B.8 D.1 D.3
+D.11 D.12
+D.12 C.2
+######################
+
+From this graph, we can build a pushdown system (PDS) that describes the possible moves in the labyrinth.
+Its stack alphabet (Sigma) is the set of all recursive boxes + \bot. Its control states are the locations.
+
+Let G be the graph of a labyrinth.
+
+For all edges u --> v in G, and all alpha in Sigma: add the rule "u <alpha> --> v <alpha>"
+(this corresponds to moving in the same level).
+
+For all locations X.y and all alpha in Sigma: add the rule "X.y <alpha> --> y <X alpha>"
+(this corresponds to entering a recursive box)
+
+For all locations X.y: add the rule "y <X> --> y <>"
+(this corresponds to exiting a recursive box)
+
+For all "outer" locations y: add the rule "y <\bot> --> y <>"
+(this corresponds to getting out of the labyrinth)
+
+For instance, the infinite labyrinth corresponds to the PDS (in "moped syntax"):
+
+##################################
+(a <\bot>)
+a <\bot> --> X.a <\bot>
+X.a <\bot> --> a <\bot>
+b <\bot> --> X.b <\bot>
+X.b <\bot> --> b <\bot>
+X.a <\bot> --> a <X \bot>
+a <X> --> X.a <\bot>
+X.b <\bot> --> b <X \bot>
+b <X> --> X.b <\bot>
+################################
+
+This is easy to produce automatically from the adjacency graph. This reads as follows: 
+
+(starting_state <starting_stack_symbol>)
+state <top_stack_symbol> --> new_state <replacement_symbol1 replacement_symbol2 ...>
+
+(a pushdown system is a pushdown automata that does not read any input. It
+would not be difficult to adapt all this to actual pushdown automata...)
+
+The winning condition usually consists in either reaching a given state, or
+emptying the stack (these two conditions easily reduce to each other). The
+second condition is somewhat simpler. If there is a target location (a treasure),
+then it is sufficient to ensure that it enables to exit the current recursive
+box while staying in the same location (this allows to empty the stack). 
+E.g. to add the edge: X.treasure <--> treasure for each recursive box X.
+
+(the treasure must be an "outer" location, without dot in its name).
+
+So the "labyrinth problem" consists in giving the adjacency graph and the
+start state (the initial stack is always \bot). I suggest that the **first**
+state that appears in the graph is the start state. Therefore, the adjacency
+graph fully describes the problem.
+
+---------------------------------
+
+Algorithms
+==========
+
+In a pushdown system (or pushdown automata), the ability to move from a state
+p to another state q depends on the content of the stack. A **configuration**
+is given by the current state + the stack. In our case, the set of "winning"
+configuration is formed by any state + the empty stack.
+
+This section describes an algorithm that computes the set of *all*
+configurations Pre*(C) from which another target set C of configurations is
+reachable. More precisely, given a (usual) finite automaton A that accepts C,
+we build another automaton B that accepts Pre*(C).
+
+This is sufficient for our purpose, because this makes it easy to check if the
+initial configuration (start, \bot) belongs to Pre*(C).
+
+These finite automata on the set of configurations of a Pushdown system P are
+called "P-automata". The are not exactly common Finite State Machines. They
+have one initial state for each "control state" of the PDS (i.e. each
+location of the labyrinth). The P-automaton A accepts the configuration "q
+<s1 s2 ...>" if starting from state q (in A) and reading symbols s1, s2, ...,
+the automaton A ends up in an accepting state (possibly ends up in an
+accepting state if A is non-deterministic).
+
+We are interested by the set of configurations C that are "winning", i.e. from
+which it is possible to exit the labyrinth. Here is an automaton A that
+accepts it:
+- It has one (initial) state for each location of the labyrinth. 
+- It has an (accepting) state "Victory"
+- All the state corresponding to outer locations of the labyrinth are connected
+to "Victory" with an edge labelled by \bot.
+
+(in other terms, if you reach an outer location with stack \bot, you win).
+
+The algorithm that constructes Pre*(C) is due to Finkel and Bouajjani.
+
+References : 
+- Saturation algorithms for model-checking pushdown systems, by Arnaud Carayol and Matthew Hague.
+- A. Bouajjani, J. Esparza & O. Maler (1997): Reachability Analysis of Pushdown Automata: Application to Model-Checking. In: Proceedings of CONCUR’97, pp. 135–150, doi:10.1007/3-540-63141-0_10.
+- A. Finkel, B. Willems & P. Wolper (1997): A direct symbolic approach to model checking pushdown systems. Electr. Notes Theor. Comput. Sci. 9, pp. 27–37, doi:10.1007/3-540-45465-9_60.
+
+
+It starts from A, and adds *transitions* to it repeatedly (but it does not add new states). Once A is "saturated" the procedure ends.
+
+Suppose that P has k rules.
+
+Loop:
+    for each rule p <A> --> q <w>   (w is a list of stack symbols):
+        if in A, the sequence of symbols w sends state q to state s:
+           add a transition p --A--> s to A.
+
+(in other terms, if in q<w> we can go to state s, then we can go from p<A> to s as well, via q).
+
+This takes time O(k^2).
