@@ -35,8 +35,7 @@
 \title{\textsc{MIDTERM} Is a Deterministic Technique to Exit Recursive Mazes}
 
 \author{Charles Bouillaguet}{LIP6 laboratory, Sorbonne Université, Paris, France}{charles.bouillaguet@lip6.fr}{https://orcid.org/0000-0001-9416-6244}{} 
-\author{Orel Cosseron}{...}{email orel}{}{}
-
+\author{Orel Cosseron}{Independent researcher}{orel.cosseron@provider.com}{https://orcid.org/0000-0001-9481-8935}{}
 
 \authorrunning{C. Bouillaguet and O. Cosseron}
 
@@ -45,7 +44,7 @@
 % \ccsdesc[100]{Theory of computation~Computational complexity and cryptography}
 % \ccsdesc[100]{Theory of computation~Design and analysis of algorithms}% Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
 
-\keywords{Quantum computing, blockchains, IA, pushdown automaton, reachability, graph rewriting}
+\keywords{Quantum computing, blockchains, IA, pushdown automaton, reachability, graph rewriting, recursive maze, $(\lambda x. xx)(\lambda x. xx)$}
 
 %\supplement{Source code available at : \url{https://gitlab.lip6.fr/almasty/mq/}}
 
@@ -834,7 +833,7 @@ However, an alternate, ``dual'' description is also useful
 of the maze, and where there is a directed edge $\alpha \xrightarrow{X.i} \beta$
 if it is possible to go from wire $\alpha$ to wire $\beta$ by entering the
 recursive box labelled $X$ using its pin labelled $i$. We denote by $E$ the
-number of edges of this graph. The dual-representation graph can be assembled in
+number of edges of this graph. The dual representation graph can be assembled in
 essentially linear time from the previous ``hypergraph'' representation:
 \begin{itemize}
 \item First, associate each outer pin to the wire that contains it.
@@ -895,7 +894,7 @@ writes:
   which is decidable.
 \end{quote}
 
-Making this intuition precise is easier with the dual-representation graph of
+Making this intuition precise is easier with the dual representation graph of
 recursive mazes. We assume that there is an initial wire (denoted as $\alpha$)
 where the player starts. The position of the player is made of a current wire
 and a stack of entered boxes. We write such a position as ``wire | stack'' or
@@ -925,7 +924,7 @@ $\mathcal{P}$ (think $1, \dots, n$), the set of recursive boxes is $\mathcal{B}$
 \item The \emph{transition function}
   $f : Q \times \Sigma \times \Lambda \rightarrow Q \times \Lambda^*$ is defined
   as follows. For every edge $\phi \xrightarrow{X.i} \psi$ in the
-  dual-representation graph and for any box $Y \in \mathcal{B}$,
+  dual representation graph and for any box $Y \in \mathcal{B}$,
   $f(\phi, X.i, Y) = (\psi, XY)$ and
   $f(\psi, \overline{X.i}, X) = (\phi, \emptyset)$. If the goal is to exit the
   maze, additionally set $f(\omega, \texttt{done}, \bot) = (\texttt{goal}, \emptyset)$
@@ -1240,7 +1239,7 @@ per derivation rule. This decides if a recursive maze can be exited in time $\bi
   \end{scope}  
 \end{tikzpicture}
 \end{center}
-\caption{\label{fig:quadraticE} \sout{botched attempt at 3-Dyck} Maze showing that the number of edges in the dual-representation graph can be quadratic in the number of wires.}
+\caption{\label{fig:quadraticE} \sout{botched attempt at 3-Dyck} Maze showing that the number of edges in the dual representation graph can be quadratic in the number of wires.}
 \end{figure}
 
 However, the dual representation of the maze can have $E = \bigOmega{W^2}$
@@ -1286,7 +1285,7 @@ grammar given above.
 We therefore define a binary relation $\equiv$ between wires, where
 $\alpha \equiv \gamma$ if and only if there is a box $X$ and two pins $i, j$
 such that the two edges $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$
-exist in the dual-representation graph. In this case we say that there is a
+exist in the dual representation graph. In this case we say that there is a
 \emph{local wormhole} between $\alpha$ and~$\gamma$. Note that $\equiv$ is
 symmetric, but not necessarily reflexive nor transitive. We then consider the
 following sequence of pairs of wires:
@@ -1326,7 +1325,7 @@ locations. Recursive mazes lack this mechanism, and that is really
 unfortunate. For this reason, we suggest to extend the game with the ability to
 fast-travel through wormholes (and we bet that this could relieve players of a
 considerable amount of frustration). We extend the usual semantic of the
-dual-representation graph with these wormholes, using dashed edges:
+dual representation graph with these wormholes, using dashed edges:
 
 \begin{center}
   \begin{tikzpicture}[scale=1.25]
@@ -1426,7 +1425,7 @@ our proposal is simple: when a local wormhole
 $\alpha \xrightarrow{X.i} \beta \xleftarrow {X.j} \gamma$ is identified, we add
 an edge \raisebox{-4.5pt}{\tikz{\node (x) {$\alpha$}; \node at (1.3, 0) (y)
     {$\gamma$}; \draw[red,dashed,ultra thick,<->] (x) -- (y);}} to the
-dual-representation graph, and we immediately contract it. This collapses the
+dual representation graph, and we immediately contract it. This collapses the
 two nodes that are the extremities of the wormhole into one and deletes the
 newly added edge. The reader may wonder what was the point of adding add edge
 just before deleting it. So, OK, let's not add it, and instead directly
@@ -1500,7 +1499,7 @@ process as long as possible\footnote{After a draft of this paper was written, we
 \caption{\label{fig:merge} Illustration of the graph contraction process. Edge labels in lower-case letters are arbitrary.}
 \end{figure}
 
-\subsection{Correctness}
+%\subsection{Correctness}
 
 We now establish the main property of the process: wormholes can be contracted
 in any order, and at the end we get exactly the equivalence classes of
@@ -1590,7 +1589,7 @@ same result---a good one.
 \medskip
 
 \begin{theorem}\label{thm:correctness}
-  Let $G$ be the dual-representation graph of a recursive maze, and $G_{nf}$ a
+  Let $G$ be the dual representation graph of a recursive maze, and $G_{nf}$ a
   normal form of $G$ for $\stackrel{*}{\leadsto}$. Then the nodes of $G_{nf}$
   are labelled by the equivalence classes of $\stackrel{*}{\equiv}$.
 \end{theorem}
@@ -1663,14 +1662,14 @@ the theorem.
 \end{proof}
 
 We now discuss the implications of theorem~\ref{thm:correctness}. Starting from
-the dual-representation graph of a maze, run the contraction process until a
+the dual representation graph of a maze, run the contraction process until a
 normal form has been obtained. To check if it is possible to exit the maze, it
 is sufficient to examine the wires in the equivalence class of the starting
 point, and test if one of them is connected to an outer IO pin. When it is the
 case, an exit path can be built explicitly (but how to do so depends on
 implementation details discussed below).
 
-\subsection{Efficient deterministic implementation}
+\section{Efficient deterministic implementations}
 
 We now discuss the efficient implementation of the graph rewriting process
 discussed above. We assume that everything is represented as word-sized
@@ -1705,21 +1704,27 @@ are inspired from functional languages from the ML family.
 
 We keep a list (\texttt{pending}) of wormholes awaiting contraction, and process
 them one at a time, adding newly discovered wormholes to the list. We must
-however navigate around two problems: first, the same pair of wires can be
-merged by two (or more) wormholes (as shown in Fig.~\ref{fig:wormholes-pb},
-left). In our implementation, the pending list may contain several wormholes
-merging the same pair of nodes. To avoid potential issues, when processing the
-next wormhole, we first test if the two wires have already been merged. The
-second potential problem is that the number of wormholes can be quadratic in the
-size of the maze (see Fig.~\ref{fig:wormholes-pb}, right). However, not all of
-them can be collapsed: some will vanish into thin air when \emph{others} are
-collapsed.  In fact, when a wormhole
-$\alpha \xrightarrow{X.i} \beta \xleftarrow {X.j} \gamma$ is discovered and
-added to the list, we immediately remove one of the two edges from the
-graph---they would become identical later when the wormhole actually gets
-contracted and one of them would be removed anyway, so why delay the inevitable?
-With this modification, only $E$ wormholes can be added to the list. We
-implement this as follows: we look at each edge of the initial graph in
+however navigate around two problems:
+\begin{enumerate}
+\item The same pair of wires can be merged by two (or more) wormholes (as shown
+  in Fig.~\ref{fig:wormholes-pb}, left). In our implementation, the pending list
+  may contain several wormholes merging the same pair of nodes.
+
+\item The number of wormholes can be quadratic in the size of the maze, even if
+  it has only $E = \bigO{W}$ edges (see Fig.~\ref{fig:wormholes-pb},
+  right). However, not all of them can be collapsed: some will vanish into thin
+  air when \emph{others} are collapsed.
+\end{enumerate}
+
+When processing the next wormhole, we check if the two wires have already been
+merged and only proceed when it is not the case (this solves the first problem).
+
+When a wormhole $\alpha \xrightarrow{X.i} \beta \xleftarrow {X.j} \gamma$ is
+discovered and added to the list, we immediately remove one of the two edges
+from the graph---they would become identical later when the wormhole actually
+gets contracted and one of them would be removed anyway, so why delay the
+inevitable?  With this modification, only $E$ wormholes can be added to the
+list. We implement this as follows: we look at each edge of the initial graph in
 sequence: either it creates a wormhole with another ``hot'' edge (we register
 the wormhole and original the edge is sucked into the void), or it does not (we
 mark the edge as hot).
@@ -1749,129 +1754,110 @@ mark the edge as hot).
   quadratic number of wormholes (right).}
 \end{figure}
 
-When the algorithm starts, each node in the graph corresponds to a wire of the
-maze. Then nodes will be merged into supernodes. Maintaining the content of
-supernodes could have been a once-in-a-lifetime chance for us to use the
-celebrated ``inverse-Ackermann'' disjoint-set data structure (also known as
-\textsc{Union-Find}). But unfortunately, or fortunately, we make do with a
-simpler solution: we eagerly update all items when two sets are joined. We
-nevertheless use several ideas from the original analysis.
-
 Inside each supernode, one node is chosen as ``supernode leader''. The supernode
-is hosted by the leader node in the original graph. Nodes that
-have been merged into larger supernode are not actually removed from the graph ;
-they remain there but become \emph{followers} (as opposed to their leader). All
-nodes have a pointer (\texttt{leader}) to the leader node in their supernode
-(possibly themselves). Supernode leaders have a list (\texttt{followers}) of
-nodes in their supernode. The \emph{size} of a (super)node is the number of
-nodes it contains plus the number of incoming edges. The algorithm maintains the
-sizes at all time (in an array \texttt{size}), as new wormholes are discovered
-and (super)nodes are merged. %More precisely:
-% \begin{enumerate}
-% \item Each (super)node has a linked list of outgoing edges and incoming edges.
-% \item If $\omega$ is the leader of a (super)node, then $\texttt{size}[\omega]$
-%   is the size of the (super)node.
-% \end{enumerate}
+is hosted by the leader node in the original graph. Nodes that have been merged
+into larger supernode are not actually removed from the graph ; they remain
+there but become \emph{followers} (as opposed to their leader).
 
-When two (super)nodes are merged, to form the resulting supernode, the smaller
-one (by \texttt{size}) is ``absorbed'' into the larger one. More precisely:
-\begin{itemize}
-\item The \texttt{leader} pointer of all nodes in the smaller (super)node is set to the
-  larger supernode.
-\item Hot edges pointing to the smaller supernode either create a wormhole and
-  are dropped, or become hot edges pointing to the larger supernode.
-\item The size of the larger supernode is augmented accordingly.
-\end{itemize}
+When two (super)nodes are merged, to form the resulting supernode, one of them
+is ``absorbed'' into the other one. Hot edges pointing to the absorbee either
+create a wormhole and are dropped, or become hot edges pointing to the absorber.
+The actual issue is to detect the new wormholes that are created by the
+displacement of edges.
+
 A major difference with the process suggested by Fig.~\ref{fig:merge} is that we
 only move the targets of edges, not their origins. This does not affect the
-process, at least not until an actual exit path has to be constructed.
-Doing all the work on the smaller of the two nodes minimizes the total amount of
-work (this idea is common ; for instance it is at work in Hopcroft's DFA
-minimization algorithm~\cite{hopcroft1971nlogn}).
+process, at least not until an actual exit path has to be constructed. This
+issue is discussed in section~\ref{sec:arg}.
 
-The actual issue is to detect the new wormholes that are created by the
-displacement of edges. We propose a straightforward and deterministic
-solution that uses an array \texttt{hot} of dimension $W \times B$ such that
-$\texttt{hot}[\beta,X]$ is either \texttt{none} or $\texttt{some} (\alpha, i)$,
-in which case there is a ``hot'' edge $\alpha \xrightarrow{X.i} \beta$ in the
-graph. The downside is that initializing the \texttt{hot} array could
-potentially dominate the whole running time, at least asymptotically.
+\subsection{Dense mazes}
+\label{sec:dense}
 
-Because we need to efficiently iterate on the hot incoming edges to a node, we
-also use an auxiliary array \texttt{hotbox} where $\texttt{hotbox}[\omega]$
-contains a list of $X$'s such that $\texttt{hot}[\omega, X] \neq
-\texttt{none}$. This is a lightweight variant of the ``sparse array'' technique
-abundantly used in sparse matrix codes and presented
-in~\cite{10.1145/176454.176484}, in a different context.
+We first describe a simple implementation tailored for the case of \emph{dense}
+mazes, where $E \approx WB$. We use a \texttt{hot} array of dimension
+$W \times B$ such that $\texttt{hot}[\beta,X]$ is either \texttt{none} or
+$\texttt{some} (\alpha, i)$, in which case there is a ``hot'' edge
+$\alpha \xrightarrow{X.i} \beta$ in the graph. % Initializing the \texttt{hot}
+% array takes time $\bigO{BW}$.
 
-The pseudo-code of our solution in shown as Algorithm~\ref{algo:main}. We
-believe that it is simple enough to be implemented in assembler by an
+When the algorithm starts, each node in the graph corresponds to a wire of the
+maze. Then nodes will be merged into supernodes. Maintaining the content of
+supernodes is a once-in-a-lifetime chance for us to use the celebrated
+``inverse-Ackermann'' disjoint-set data structure (also known as
+\textsc{Union-Find}). This uses the two arrays \texttt{parent} and \texttt{rank}.
+
+The pseudo-code of our solution in shown as Algorithm~\ref{algo:main-dense}. We
+believe that it is simple enough to be implemented in assembler by a motivated
 undergraduate student. Its step-by-step execution on the simple maze of
 Fig.~\ref{fig:simple} is shown in Fig.~\ref{fig:step-by-step}. When it
 terminates, equivalence classes of $\stackrel{*}{\equiv}$ have been
-determined. This easily allows to test if the maze can be exited. The actual
-construction of an exiting path is deferred to section~\ref{sec:arg}.
+determined. This easily allows to test if the maze can be exited.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
+  \Function{Find}{$\alpha$}
+  \If{$\texttt{parent}[\alpha] \neq \alpha$}           \Comment{path compression}
+  \State $\texttt{parent}[\alpha] \gets \Call{Find}{\texttt{parent}[\alpha]}$
+  \EndIf
+  \State \Return $\texttt{parent}[\alpha]$
+  \EndFunction
+
+  \bigskip
+  
   % an edge either becomes hot or creates a wormhole
   \Procedure{AddEdge}{$\alpha, X, i, \beta$}
    \If{$\texttt{hot}[\beta, X] = \texttt{some} (\gamma, j)$}
    \State $\texttt{pending} \gets (\alpha, X, i, \beta, j, \gamma)) :: \texttt{pending}$       \Comment{detected $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$}
    \Else
    \State $\texttt{hot}[\beta, X] \gets \texttt{some} (\alpha, i)$   
-   \State $\texttt{hotbox}[\beta] \gets X :: \texttt{hotbox}[\beta]$
    \EndIf
    \EndProcedure
 
   \bigskip
 
   \Procedure{Merge}{$\sigma, \pi$}                                    
-  \If{$\texttt{size}[\sigma] > \texttt{size}[\pi]$}                   
-  \State $\texttt{tmp} \gets \sigma, \sigma \gets \pi, \pi \gets \texttt{tmp}$  \Comment{union-by-size: now $\texttt{size}[\sigma] \leq \texttt{size}[\pi]$}
+  \If{$\texttt{rank}[\pi] < \texttt{rank}[\sigma]$}                               \Comment{\textsc{Union}}
+  \State $\texttt{tmp} \gets \pi, \pi \gets \sigma, \sigma \gets \texttt{tmp}$    \Comment{Union-by-rank: $\sigma$ is absorbed in $\pi$}
   \EndIf
-
-  \State $\texttt{size}[\pi] \gets \texttt{size}[\pi] + \texttt{size}[\sigma]$
-  
-  \For{each $\omega \in \texttt{followers}[\sigma]$}                             
-  \State $\texttt{leader}[\omega] \gets \pi$                               
-  \State $\texttt{followers}[\pi] \gets \omega :: \texttt{followers}[\pi]$ 
-  \EndFor
-
-  \For{each $X \in \texttt{hotbox}[\sigma]$}                           
-  \State $\texttt{some} (\omega, i) \gets \texttt{hot}[\sigma, X]$    \Comment{looking at $\omega \xrightarrow{X.i} \sigma$}
-  \State $\Call{AddEdge}{\omega, X, i, \pi}$                          \Comment{replace by $\omega \xrightarrow{X.i} \pi$}
+  \State $\texttt{parent}[\sigma] = \pi$
+  \If{$\texttt{rank}[\sigma] = \texttt{rank}[\pi]$}
+  \State increment $\texttt{rank}[\pi]$
+  \EndIf
+  \For{$0 \leq X < B$}                                                    \Comment{Transfer hot edges}
+    \If{$\texttt{hot}[\sigma, X] \neq \texttt{none}$}
+      \State $\texttt{some} (\omega, i) \gets \texttt{hot}[\sigma, X]$    \Comment{looking at $\omega \xrightarrow{X.i} \sigma$}
+      \State $\Call{AddEdge}{\omega, X, i, \pi}$                          \Comment{replace by $\omega \xrightarrow{X.i} \pi$}
+    \EndIf
   \EndFor  
   \EndProcedure
 
   \bigskip
 
-  \Procedure{CollapseMaze}{$W, B, \texttt{G}$}                          
+  \Procedure{CollapseMazeDense}{$W, B, \texttt{G}$}                          
   \State $\texttt{pending} \gets \texttt{[]}$                           \Comment{Setup}
   \For{$0 \leq \alpha < W$}
-    \State $\texttt{size}[\alpha] \gets 1$
-    \State $\texttt{leader}[\alpha] \gets \alpha$                       \Comment{$\alpha$ is a supernode by itself}
-    \State $\texttt{followers}[\alpha] \gets \alpha :: \texttt{[]}$
-    \State $\texttt{hotbox}[\alpha] \gets \texttt{[]}$                 
+    \State $\texttt{parent}[\alpha] \gets \alpha$                       \Comment{$\alpha$ is a supernode by itself}
+    \State $\texttt{rank}[\alpha] \gets 0$
     \For{$0 \leq X < B$}
-    \State $\texttt{hot}[\alpha,X] \gets \texttt{none}$                 \Comment{potential ``hot-spot''}
+    \State $\texttt{hot}[\alpha,X] \gets \texttt{none}$                 
     \EndFor
     \For{each $(X, i, \beta)$ in $\texttt{G}[\alpha]$}                  \Comment{prime the wormhole pump} 
       \State $\Call{AddEdge}{\alpha, X, i, \beta}$
-      \State increment $\texttt{size}[\beta]$
     \EndFor
   \EndFor
 
-  \While{$\texttt{pending} \neq \texttt{[]}$}                                  \Comment{main loop : process known wormholes}
+  \While{$\texttt{pending} \neq \texttt{[]}$}                                   \Comment{main loop : process known wormholes}
   \State $(\alpha, X, i, \beta, j, \gamma) :: \texttt{tail} \gets \texttt{pending}$     \Comment{popped $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$}
   \State $\texttt{pending} \gets \texttt{tail}$    
-  \If{$\texttt{leader}[\alpha] \neq \texttt{leader}[\gamma]$}                   \Comment{already merged?}
-  \State $\Call{Merge}{\texttt{leader}[\alpha], \texttt{leader}[\gamma]}$       \Comment{merge nodes containing $\alpha$ and $\gamma$}                            
+  \State $\sigma \gets \Call{Find}{\alpha}$
+  \State $\pi \gets \Call{Find}{\gamma}$ 
+  \If{$\sigma \neq \pi$}                                                        \Comment{already merged?}
+  \State $\Call{Merge}{\sigma, \pi}$                                            \Comment{merge nodes containing $\alpha$ and $\gamma$}                            
   \EndIf
   \EndWhile
   \EndProcedure
 \end{algorithmic}
-\caption{Algorithm to collapse recursive mazes. \label{algo:main}}
+\caption{Algorithm to collapse dense recursive mazes. \label{algo:main-dense}}
 \end{algorithm}
 
 
@@ -1903,11 +1889,11 @@ construction of an exiting path is deferred to section~\ref{sec:arg}.
 
   
   \begin{tikzpicture}[scale=1]       % STEP 0
-    \node[draw, fill=orange] at (4, 2) (start) {$\alpha_1$};
-    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta_2$};
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma_4$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta_1$};
-    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta_3$};
+    \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     
     \draw (start) edge[->] node[above] {$A$} (K);
     \draw (K) edge[->] node[above] {$B$} (R);
@@ -1931,11 +1917,11 @@ construction of an exiting path is deferred to section~\ref{sec:arg}.
   \vspace{0.25cm}
   
   \begin{tikzpicture}[scale=1]      % STEP 1
-    \node[draw, fill=orange] at (4, 2) (start) {$\alpha_1$};
-    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta_3$};
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma_4$};
+    \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
     \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
-    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta_3$};
+    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     
     \draw (start) edge[->] node[above] {$A$} (K);
     \draw (K) edge[->] node[above] {$B$} (R);
@@ -1958,9 +1944,9 @@ construction of an exiting path is deferred to section~\ref{sec:arg}.
   \vspace{0.25cm}
   
   \begin{tikzpicture}[scale=1]      % STEP 2
-    \node[draw, fill=orange] at (4, 2) (start) {$\alpha_1$};
-    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta_3$};
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma_6$};
+    \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
     \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
 
@@ -1984,9 +1970,9 @@ construction of an exiting path is deferred to section~\ref{sec:arg}.
   \vspace{0.25cm}
   
   \begin{tikzpicture}[scale=1]      % STEP 3
-    \node[draw, fill=orange] at (4, 2) (start) {$\alpha_1$};
+    \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma_{7}$};
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
     \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
 
@@ -2013,7 +1999,7 @@ construction of an exiting path is deferred to section~\ref{sec:arg}.
   \begin{tikzpicture}[scale=1]      % STEP 4
     \node[draw,semitransparent,fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma_{8}$};
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
     \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
 
@@ -2037,36 +2023,148 @@ construction of an exiting path is deferred to section~\ref{sec:arg}.
   \end{tikzpicture}
 \end{center}
 
-\caption{Step-by-step illustration of Algorithm~\ref{algo:main}. The plain edges
-  are ``hot''. The dotted edges represent the \texttt{leader} array. The
-  \texttt{size} of each (super)node is indicated in
-  subscripts. \label{fig:step-by-step}}
+\caption{Step-by-step illustration of Algorithm~\ref{algo:main-dense}. The plain
+  edges are ``hot''. The dotted edges represent the supernode leaders (for
+  non-trivial supernodes). \label{fig:step-by-step}}
 \end{figure}
 
-\subsection{Complexity}
+It is clear that \textsc{AddEdge} runs in constant time, and that \textsc{Merge}
+runs in $\bigO{B}$ operations.  The setup phase of \textsc{CollapseMaze}
+requires $\bigO{WB + E}$ operations. The number of iterations of the
+\textbf{while} loop is at most $E$ (each new wormhole added to \texttt{pending}
+destroys an edge). \textsc{Merge} can only be invoked $W-1$ times. So the total
+time spent in \textsc{Merge} is $\bigO{BW}$ and the total time spent in calls to
+\textsc{Find} is $\bigO{E \alpha(W)}$, where $\alpha$ is the inverse-Ackermann
+function (thanks to the celebrated amortized analysis
+of~\cite{10.1145/62.2160}). Note that $\alpha(W)$ is upper-bounded by 4 when its
+$W$ is less than the number of atoms in the universe. So, the final complexity
+of \textsc{CollapseMazeDense} is $\bigO{BW + E \alpha(W)}$.
 
-The setup phase of \textsc{CollapseMaze} requires $\bigO{WB}$ operations. It is
-clear that \textsc{AddEdge} runs in constant time, and that \textsc{Merge} runs
-in time dominated by the size of the smaller supernode: it takes constant-time
-per wire in the smaller supernode, plus constant time per hot edge pointing to
-the smaller supernode (thanks to the \texttt{hotbox} array)---and not all edges
-are hot, hence the upper-bound.
+$E \approx W^2$ and $W \approx B$, then this gives a nearly-quadratic algorithm,
+improving upon the known cubic one.
+
+\subsection{Sparse mazes}
+\label{sec:sparse}
+
+When $E$ is much less than $BW$, several aspects of the algorithm could be made
+more efficient. For instance, \textsc{Merge} requires $B$ operations to inspect
+$B$ potential edges, even if just a few are present. We can use a lightweight
+variant of the ``sparse array'' technique abundantly used in very early sparse
+matrix codes and rediscovered 20 years later~\cite{10.1145/176454.176484} in a
+different context. To efficiently iterate on the hot incoming edges to a node,
+we also use an auxiliary array \texttt{hotbox} where $\texttt{hotbox}[\omega]$
+contains a list of $X$'s such that $\texttt{hot}[\omega, X] \neq \texttt{none}$.
+
+Also, when merging two nodes, we could absorb the ``smaller'' one (with less
+edges to process) into the ``larger'' one. Doing all the work on the smaller of
+the two nodes minimizes the total amount of work (this idea is common ; for
+instance it is at work in Hopcroft's DFA minimization
+algorithm~\cite{hopcroft1971nlogn}). Unfortunately, this breaks down the
+guarantees offered by the disjoint set data structure. We therefore make do with
+a more naive solution: we eagerly update all nodes when two sets are joined.
+
+All nodes have a pointer (\texttt{leader}) to the leader node in their supernode
+(possibly themselves). Supernode leaders have a list (\texttt{followers}) of
+nodes in their supernode. The \emph{size} of a (super)node is the number of
+nodes it contains plus the number of incoming edges. The algorithm maintains the
+sizes at all time (in an array \texttt{size}), as new wormholes are discovered
+and (super)nodes are merged. When two (super)nodes are merged, to form the
+resulting supernode, the smaller one (by \texttt{size}) is ``absorbed'' into the
+larger one. More precisely:
+\begin{itemize}
+\item The \texttt{leader} pointer of all nodes in the smaller (super)node is set to the
+  larger supernode.
+\item Hot edges pointing to the smaller supernode either create a wormhole and
+  are dropped, or become hot edges pointing to the larger supernode.
+\item The size of the larger supernode is augmented accordingly.
+\end{itemize}
+
+
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  % an edge either becomes hot or creates a wormhole
+  \Procedure{AddEdge'}{$\alpha, X, i, \beta$}
+   \If{$\texttt{hot}[\beta, X] = \texttt{some} (\gamma, j)$}
+   \State $\texttt{pending} \gets (\alpha, X, i, \beta, j, \gamma)) :: \texttt{pending}$       \Comment{detected $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$}
+   \Else
+   \State $\texttt{hot}[\beta, X] \gets \texttt{some} (\alpha, i)$   
+   \State $\texttt{hotbox}[\beta] \gets X :: \texttt{hotbox}[\beta]$    \Comment{Register non-empty location}
+   \EndIf
+   \EndProcedure
+
+  \bigskip
+
+  \Procedure{Merge'}{$\sigma, \pi$}                                    
+  \If{$\texttt{size}[\sigma] > \texttt{size}[\pi]$}                   
+  \State $\texttt{tmp} \gets \sigma, \sigma \gets \pi, \pi \gets \texttt{tmp}$  \Comment{union-by-size: now $\texttt{size}[\sigma] \leq \texttt{size}[\pi]$}
+  \EndIf
+
+  \State $\texttt{size}[\pi] \gets \texttt{size}[\pi] + \texttt{size}[\sigma]$
+  
+  \For{each $\omega \in \texttt{followers}[\sigma]$}                             
+  \State $\texttt{leader}[\omega] \gets \pi$                               
+  \State $\texttt{followers}[\pi] \gets \omega :: \texttt{followers}[\pi]$ 
+  \EndFor
+
+  \For{each $X \in \texttt{hotbox}[\sigma]$}                          \Comment{sparse iteration}       
+  \State $\texttt{some} (\omega, i) \gets \texttt{hot}[\sigma, X]$    \Comment{looking at $\omega \xrightarrow{X.i} \sigma$}
+  \State $\Call{AddEdge'}{\omega, X, i, \pi}$                          \Comment{replace by $\omega \xrightarrow{X.i} \pi$}
+  \EndFor  
+  \EndProcedure
+
+  \bigskip
+
+  \Procedure{CollapseMazeSparse}{$W, B, \texttt{G}$}                          
+  \State $\texttt{pending} \gets \texttt{[]}$                           \Comment{Setup}
+  \For{$0 \leq \alpha < W$}
+    \State $\texttt{size}[\alpha] \gets 1$
+    \State $\texttt{leader}[\alpha] \gets \alpha$                       \Comment{$\alpha$ is a supernode by itself}
+    \State $\texttt{followers}[\alpha] \gets \alpha :: \texttt{[]}$
+    \State $\texttt{hotbox}[\alpha] \gets \texttt{[]}$                 
+    \For{$0 \leq X < B$}
+    \State $\texttt{hot}[\alpha,X] \gets \texttt{none}$                 \Comment{potential \texttt{hot}-spot}
+    \EndFor
+    \For{each $(X, i, \beta)$ in $\texttt{G}[\alpha]$}                  \Comment{prime the wormhole pump} 
+      \State $\Call{AddEdge'}{\alpha, X, i, \beta}$
+      \State increment $\texttt{size}[\beta]$
+    \EndFor
+  \EndFor
+
+  \While{$\texttt{pending} \neq \texttt{[]}$}                                  \Comment{main loop : process known wormholes}
+  \State $(\alpha, X, i, \beta, j, \gamma) :: \texttt{tail} \gets \texttt{pending}$     \Comment{popped $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$}
+  \State $\texttt{pending} \gets \texttt{tail}$    
+  \If{$\texttt{leader}[\alpha] \neq \texttt{leader}[\gamma]$}                   \Comment{already merged?}
+  \State $\Call{Merge'}{\texttt{leader}[\alpha], \texttt{leader}[\gamma]}$       \Comment{merge nodes containing $\alpha$ and $\gamma$}                            
+  \EndIf
+  \EndWhile
+  \EndProcedure
+\end{algorithmic}
+\caption{Algorithm to collapse sparse recursive mazes. \label{algo:main-sparse}}
+\end{algorithm}
+
+\textsc{AddEdge'} still runs in constant time, and \textsc{Merge}
+runs in time dominated by the \texttt{size} of the smaller supernode: it takes
+constant-time per wire in the smaller supernode, plus constant time per hot edge
+pointing to the smaller supernode (thanks to the \texttt{hotbox} array)---and
+not all edges are hot, hence the upper-bound.
 
 % \textsc{Find} runs in time $\bigO{W}$ in the worst-case (it may go through all
 % wires), however it follows from~\cite[Thm. 4]{10.1145/62.2160} that each
 % \textsc{Find} operation terminates in amortized time $\bigO{\log W}$, because we
 % use path compression.
 
-The number of iterations of the \textbf{while} loop is at most $E$ (each new
-wormhole added to \texttt{pending} destroys an edge). It remains to control the
-total time spent in \textsc{Merge}---this is the tricky part. As the algorithm
-progresses, the sequence of merges can be represented by a binary forest. The
-wires of the maze are the leaves, and each call to \textsc{Merge} creates a new
-root whose two children are preexisting roots. It represents a new supernode
-containing all the wires associated to the leaves in the subtree. Each supernode
-is labelled by its size (as defined above). When two roots of labels $x \leq y$
-are joined, the result has label $x + y$, and we are ``charged'' $x$ operations
-(the smaller size).
+The number of iterations of the \textbf{while} loop is again at most $E$ and it
+does a constant number of operation per iteration, excluding calls to
+\textsc{Merge}. It thus remains to control the total time spent in
+\textsc{Merge}---and this is the tricky part. As the algorithm progresses, the
+sequence of merges can be represented by a binary forest. The wires of the maze
+are the leaves, and each call to \textsc{Merge} creates a new root whose two
+children are preexisting roots. It represents a new supernode containing all the
+wires associated to the leaves in the subtree. Each supernode is labelled by its
+size (as defined above). When two roots of labels $x \leq y$ are joined, the
+result has label $x + y$, and we are ``charged'' $x$ operations (the smaller
+size).
 
 In the example detailed in Fig.~\ref{fig:step-by-step}, this forest is in fact a
 binary tree:
@@ -2106,10 +2204,10 @@ binary tree:
 \end{tikzpicture}
 \end{center}
 
-Let $\mathcal{F}$ denote an arbitrary merge forest built from the
-dual representation graph of a recursive maze. Its $W$ leaves are labelled with
-the size of the wires (one plus the number of incoming hot edges). Let $S$
-denote the sum of sizes: if the dual representation graph has $E$ edges, then
+Let $\mathcal{F}$ denote an arbitrary merge forest built from the dual
+representation graph of a recursive maze. Its $W$ leaves are labelled with the
+size of the wires (one plus the number of incoming edges). Let $S$ denote the
+sum of sizes: if the dual representation graph has $E$ edges, then
 $S \leq W + E$.  Let $C(\mathcal{F})$ denote the total amount ``charged'' by
 this merge forest (i.e., an upper-bound on the total number of operations spent
 in \textsc{Merge} during the process). Then we have:
@@ -2141,36 +2239,43 @@ in \textsc{Merge} during the process). Then we have:
   and the lemma is proved because $S = \sum_\omega \texttt{size}[\omega]$.
 \end{proof}
 
-Therefore, the total running time of \textsc{CollapseMaze} is
-$\bigO{BW + E \log E}$. It is unfortunate that the running time could
-potentially be dominated by the initialization of an empty array, but here we
-are. When the dual representation graph is dense ($S \approx W^2$), this yields
-a complexity of order $W^2 \log W$, that slightly improves upon preexisting
-techniques. However, when the graph is sparse and $S \approx W$, then the $BW$
-term likely dominates, and under the plausible assumption that $W \approx B$,
-then this gives a quadratic algorithm.
+Therefore, the total running time of \textsc{CollapseMazeSparse} is
+$\bigO{BW + E \log E}$. At first glance, this could seem like a
+\emph{decremental} improvement compared to \textsc{CollapseMazeDense}. However,
+the \emph{only} part that requires $BW$ operations is the initialization of the
+$\texttt{hot}$ array. We therefore see two ways to cheat our way out of this
+embarrassing situation.
 
-This analysis has a somewhat obvious shortcoming: the number of hot edges is at
-most $BW$, and this could be smaller than $E$ if the graph is dense and
-$B \ll W$. In this case, setting the \texttt{size}'s to the number of wires in a
-supernode would result in a algorithm of running time $\bigO{WB + W \log W}$
-(there are at most $W$ merges, and each one spend time at most $B$ processing
-hot edges). Setting the \texttt{size}'s to the number of wires plus the number
-of incoming hot edges would likely reduce the actual running time, but it seems
-that it breaks the $E \log E$ argument.
+\begin{itemize}
+\item We initially need the \texttt{hot} array to be filled with the
+  \texttt{none} value. If the array was \emph{provided} to us in this state,
+  then everything would be perfect. \textsc{CollapseMazeSparse} would run in
+  time $\bigO{E \log E}$, mission accomplished. And although this is \emph{a
+    bit} cheating, it is not too bad because we could easily \emph{restore} the
+  \texttt{hot} array to its initial state with only a constant factor increase
+  in the running time (just store the indices of all modified locations and
+  restore them to \texttt{none} at the end of the algorithm).
 
-To suppress the $\bigO{WB}$ term corresponding to the initialization of
-\texttt{hot}, one possibility would be to use a hash table instead of a
-bi-dimensional array. However, this then requires some kind of randomization and
-we leave it as an open problem.
+  It follows that if a long sequence of mazes had to be solved in sequence, then
+  a single (large enough) \texttt{hot} array could be initialized \emph{once}
+  and used several times, so the cost of its initialization could be amortized
+  over an (arbitrarily long) sequence of uses.
 
-\subsection{Construction of an exit path}
+\item Initializing the \texttt{hot} array annoys us. Wo we could simply get rid
+  of it and use a hash table instead. It will ever only hold $E$ entries, and we
+  have a time budget to initialize an array of size $E \log E$, so that we can
+  keep the fill ratio of this hash table comfortably low.  However, this
+  requires some kind of randomization and we leave it as an open problem.
+\end{itemize}
+
+
+\section{Construction of an exit path}
 \label{sec:arg}
 
 All wires in an equivalence class of $\stackrel{*}{\equiv}$ are mutually
 reachable (without modifying the stack). In this section we show how to augment
-Algorithm~\ref{algo:main} to provide the computation of such paths without extra
-cost.
+Algorithms~\ref{algo:main-dense} and~\ref{algo:main-sparse} to provide the
+computation of such paths without asymptotically increasing their complexity.
 
 In dual representation graph, an edge $\alpha \xrightarrow{X.i} \beta$ is
 labelled with an instruction (``$X.i$''). This describes a feasible move in the
@@ -2184,20 +2289,21 @@ to actually cross the edge). We write these identifier with a ``sharp''
 sequence identifiers to actual sequences of instructions and instruction
 sequence identifiers. This time, an edge $\alpha \xrightarrow[\#42]{X} \beta$
 means that the sequence of instruction $\#42$ takes the player from wire
-$\alpha$ to wire $\beta$, while entering box $X$.
+$\alpha$ to wire $\beta$, while entering box $X$. So, before the graph rewriting
+process even start, we transform the dual representation graph into the
+\emph{extended dual representation graph} shown in Fig.~\ref{fig:extended}.
 
-
-So, before the graph rewriting process even start, we transform the dual
-representation graph into the \emph{extended dual representation graph} shown in
-Fig.~\ref{fig:extended}. We then perform the same graph rewriting process,
-except that we now take care of instruction sequence identifiers as shown in
+We then perform the same graph rewriting process, except that we now take care
+of instruction sequence identifiers as shown in
 Fig.~\ref{fig:merge-extended}. All the edges incident to the supernode that gets
 ``absorbed'' gets a new instruction sequence identifier. In the figure, the
-sequence of instruction $\# \mathcal{K} := \mathcal{I} ; \overline{\mathcal{git push -u origin mainJ}}$
+sequence of instruction $\# \mathcal{K} := \mathcal{I} ; \overline{\mathcal{J}}$
 travels from $\alpha$ to $\gamma$. Edges incoming into $\alpha$ are now incoming
 into $\gamma$, therefore $\# \mathcal{K}$ must be added after their instruction
 sequence. Edges pointing out of $\alpha$ now point out of $\gamma$, so
-$\overline{\# \mathcal{K}}$ must be added before their instruction sequence. We finally record the ``spanning'' edge $\alpha--\gamma$ with instruction sequence identifier $\# \mathcal{K}$.
+$\overline{\# \mathcal{K}}$ must be added before their instruction sequence. We
+finally record the ``spanning'' edge
+$\alpha \xrightarrow{\# \mathcal{K}} \gamma$.
 
 \begin{figure}
 \begin{center}
@@ -2293,13 +2399,365 @@ $\overline{\# \mathcal{K}}$ must be added before their instruction sequence. We 
 \node at (5, -2.5) {$\# \mathcal{U}' := \overline{\# \mathcal{K}}; \# \mathcal{U}$};
 \node at (5, -3.0) {$\# \mathcal{R}' := \overline{\# \mathcal{K}}; \# \mathcal{R}$};
 
-
 \end{tikzpicture}
 \caption{\label{fig:merge-extended} Illustration of the extended graph contraction
   process (showing only instruction sequence identifiers). The two thick edges
   have the same box attribute. It modifies the labels of all edges incident to
   $\alpha$ and registers one new instruction sequence identifier for each one.}
 \end{figure}
+
+We the rewriting process is over, the spanning edge form (rooted) spanning trees
+of the connected components. Therefore, when a pair of nodes are reachable by a
+path, this path can be assembled by following the spanning edges.
+
+Compared to Algorithm~\ref{algo:main}, this requires the following modifications:
+\begin{itemize}
+\item Not only the target, but also the origin of hot edges incident to an
+  ``absorbed'' node must be modified. This requires each node to we aware not
+  only of its incoming hot edges, but also of the outgoing ones.
+
+\item The instruction sequences on each edge must be maintained.
+
+\item When a wormhole
+  $\alpha \xrightarrow[\# \mathcal{I}]{X} \beta \xleftarrow[\# \mathcal{J}]{X}
+  \gamma$ is discovered, one of the two edges is removed from the graph, but its
+  instruction sequence identifier must not be lost (otherwise we will not be
+  able to form the spanning edge). Therefore,
+  $(\alpha, X, \# \mathcal{I}, \beta, \# \mathcal{J}, \gamma)$ must be pushed
+  onto the \texttt{pending} list.
+
+\item Spanning edges must be stored separately.
+\end{itemize}
+
+Fig.~\ref{fig:path-finding} illustrates the process. In the end, this produces the path \#18, that expands as:
+\begin{align*}
+  \#18
+  &= \# 16; \overline{\#14} \\
+  &= (A.4; \#15); (\overline{A.2}; \#11) \\
+  &= A.4; (\#12; \overline{D.1}); \overline{A.2}; (C.5; \overline{C.3});  \\
+  &= A.4; (\#10; \#11); \overline{D.1}; \overline{A.2}; C.5; \overline{C.3} \\
+  &= A.4; (\overline{\#9}; D.3); (C.5; \overline{C.3}); \overline{D.1}; \overline{A.2}; C.5; \overline{C.3} \\
+  &= A.4; B.1; \overline{B.2}; D.3; C.5; \overline{C.3}; \overline{D.1}; \overline{A.2}; C.5; \overline{C.3}
+\end{align*}
+This is indeed an exit path, but not one of optimal length (compare to the one
+given earlier in the text). Note that exponentially-long paths can be
+represented in polynomial space by the list of instruction sequence identifiers.
+
+We leave the problem of producing a minimal-length exit path open for future work.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}
+\begin{center}
+  \tikzset{every node/.style={font=\scriptsize}}
+
+  \begin{tikzpicture}[scale=1]       % initial graph
+    \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
+
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
+    
+    \draw (start) edge[->] node[above=-0.5mm] {$A$} node[below=-0.5mm] {\#1} (K);
+    \draw (K) edge[->] node[above=-0.5mm, very near start] {$B$} node[below=-0.5mm, very near start] {\#2} (R);
+
+    \draw (B) edge[->, loop right] node[right,align=center] {$C$ \\ $\#6$} ();
+    \draw (B) edge[->, bend left] node[near start, below left=-1mm] {$\#7$} node[near start, above right=-1mm] {$A$} (R);
+
+    \draw (G) edge[->] node[above=-0.5mm, very near start] {$D$} node[below=-0.5mm, very near start] {$\#5$} (B);
+    \draw (G) edge[->] node[left,align=center] {$B$ \\ $\#4$} (R);
+    
+    \draw (R) edge[->, loop left] node[left,align=center] {$D$ \\ $\#3$} ();
+
+    \draw (R) edge[->, bend left] node[near start, above right=-1mm] {$C$} node[near start, below left=-1mm] {$\#8$} (B);
+
+    \begin{scope}[xshift=-1.5cm,yshift=0.25cm]
+    \node[anchor=west] at (5, 2)    {$\#1 := A.4$};
+    \node[anchor=west] at (5, 1.66) {$\#2 := B.1$};
+    \node[anchor=west] at (5, 1.33) {$\#3 := D.1$};
+    \node[anchor=west] at (5, 1)    {$\#4 := B.2$};
+    \node[anchor=west] at (5, 0.66) {$\#5 := D.3$};
+    \node[anchor=west] at (5, 0.33) {$\#6 := C.5$};
+    \node[anchor=west] at (5, 0)    {$\#7 := A.2$};
+    \node[anchor=west] at (5,-0.33) {$\#8 := C.3$};
+  \end{scope}
+\end{tikzpicture}
+
+  \vspace{0.25cm}
+  \hrule
+  \vspace{0.25cm}
+
+  
+  \begin{tikzpicture}[scale=1]       % STEP 0
+    \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
+
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
+    
+
+%   \draw (B) edge[->, loop right] node[right,align=center] {$C$ \\ $\#6$} ();
+%   \draw (G) edge[->] node[left,align=center] {$B$ \\ $\#4$} (R);
+
+    \draw (start) edge[->] node[above=-0.5mm] {$A$} node[below=-0.5mm] {\#1} (K);
+    \draw (K) edge[->] node[above=-0.5mm, very near start] {$B$} node[below=-0.5mm, very near start] {\#2} (R);
+    \draw (B) edge[->, bend left] node[near start, below left=-1mm] {$\#7$} node[near start, above right=-1mm] {$A$} (R);
+    \draw (G) edge[->] node[above=-0.5mm, very near start] {$D$} node[below=-0.5mm, very near start] {$\#5$} (B);
+    \draw (R) edge[->, loop left] node[left,align=center] {$D$ \\ $\#3$} ();
+    \draw (R) edge[->, bend left] node[near start, above right=-1mm] {$C$} node[near start, below left=-1mm] {$\#8$} (B);
+
+\begin{scope}[xshift=-1.5cm,yshift=0.25cm]
+    \node[anchor=west] at (5, 2)    {$\#1 := A.4$};
+    \node[anchor=west] at (5, 1.66) {$\#2 := B.1$};
+    \node[anchor=west] at (5, 1.33) {$\#3 := D.1$};
+    \node[anchor=west] at (5, 1)    {$\#4 := B.2$};
+    \node[anchor=west] at (5, 0.66) {$\#5 := D.3$};
+    \node[anchor=west] at (5, 0.33) {$\#6 := C.5$};
+    \node[anchor=west] at (5, 0)    {$\#7 := A.2$};
+    \node[anchor=west] at (5,-0.33) {$\#8 := C.3$};
+
+    \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
+    \node[anchor=west] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
+    \node[anchor=west] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+
+    \node[anchor=west] at (10.5, -0.5) {before the main loop};
+  \end{scope}
+\end{tikzpicture}
+
+  \vspace{0.25cm}
+  \hrule
+  \vspace{0.25cm}
+  
+  \begin{tikzpicture}[scale=1]      % STEP 1
+    \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
+
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
+    
+    \draw (G) edge[red, dotted, ->] node[above left=-2mm, very near start] {\# 9} (K);
+    
+%   \draw (B) edge[->, loop right] node[right,align=center] {$C$ \\ $\#6$} ();
+%   \draw (G) edge[->] node[left,align=center] {$B$ \\ $\#4$} (R);
+
+    \draw (start) edge[->] node[above=-0.5mm] {$A$} node[below=-0.5mm] {\#1} (K);
+    \draw (K) edge[->] node[above=-0.5mm, very near start] {$B$} node[below=-0.5mm, very near start] {\#2} (R);
+    \draw (B) edge[->, bend left] node[near start, below left=-1mm] {$\#7$} node[near start, above right=-1mm] {$A$} (R);
+    \draw (K) edge[->] node[right=-0.5mm, align=center] {$D$ \\ \# 10} (B);
+    \draw (R) edge[->, loop left] node[left,align=center] {$D$ \\ $\#3$} ();
+    \draw (R) edge[->, bend left] node[near start, above right=-1mm] {$C$} node[near start, below left=-1mm] {$\#8$} (B);
+
+\begin{scope}[xshift=-1.5cm,yshift=0.25cm]
+    \node[anchor=west] at (5, 2)    {$\#1 := A.4$};
+    \node[anchor=west] at (5, 1.66) {$\#2 := B.1$};
+    \node[anchor=west] at (5, 1.33) {$\#3 := D.1$};
+    \node[anchor=west] at (5, 1)    {$\#4 := B.2$};
+    \node[anchor=west] at (5, 0.66) {$\#5 := D.3$};
+    \node[anchor=west] at (5, 0.33) {$\#6 := C.5$};
+    \node[anchor=west] at (5, 0)    {$\#7 := A.2$};
+    \node[anchor=west] at (5,-0.33) {$\#8 := C.3$};
+
+    \begin{scope}[xshift=2cm,yshift=2.66cm]
+    \node[anchor=west,red] at (5,-0.66) {$\#9 := \# 4; \overline{\# 2}$};
+    \node[anchor=west] at (5,-1) {$\#10 := \overline{\# 9}; \# 5$};
+  \end{scope}
+  
+    \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
+    \node[anchor=west] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+\end{scope}
+  \end{tikzpicture}
+
+  \vspace{0.25cm}
+  \hrule
+  \vspace{0.25cm}
+
+  \begin{tikzpicture}[scale=1]      % STEP 2 (new)
+    \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.125);
+
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
+    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
+    
+    \draw (G) edge[red, dotted, ->] node[above left=-2mm, very near start] {\# 9} (K);
+    \draw (B) edge[red, dotted, ->] node[above right=-2mm, near start] {\# 11} (R);
+    
+%   \draw (B) edge[->, loop right] node[right,align=center] {$C$ \\ $\#6$} ();
+%   \draw (G) edge[->] node[left,align=center] {$B$ \\ $\#4$} (R);
+%   \draw (R) edge[->, bend left] node[near start, above right=-1mm] {$C$} node[near start, below left=-1mm] {$\#8$} (B);
+%   \draw (B) edge[->, bend left] node[near start, below left=-1mm] {$\#7$} node[near start, above right=-1mm] {$A$} (R);
+%   \draw (K) edge[->] node[right=-0.5mm, align=center] {$D$ \\ \# 10} (B);
+   \draw (R) edge[->, loop left] node[left,align=center] {$D$ \\ $\#3$} ();
+    
+    \draw (start) edge[->] node[above=-0.5mm] {$A$} node[below=-0.5mm] {\#1} (K);
+    \draw (K) edge[->] node[above=-0.5mm, near start] {$B$} node[below=-0.5mm, near start] {\#2} (R);
+    \draw (R) edge[->, loop above] node[above=-0.5mm,align=center] {$C$ \\ \# 13} ();
+    \draw (R) edge[->, loop below] node[below=-0.5mm,align=center] {$A$ \\ \# 14} ();
+%    \draw[->] (K.north west) .. controls (1.5, 3) and (0.5, 3) .. node[above=-0.5mm] {$D$} node[below] {\# 12} (R.north east);      
+
+
+    \begin{scope}[xshift=-1.5cm,yshift=0.75cm]
+    \node[anchor=west] at (5, 2)    {$\#1 := A.4$};
+    \node[anchor=west] at (5, 1.66) {$\#2 := B.1$};
+    \node[anchor=west] at (5, 1.33) {$\#3 := D.1$};
+    \node[anchor=west] at (5, 1)    {$\#4 := B.2$};
+    \node[anchor=west] at (5, 0.66) {$\#5 := D.3$};
+    \node[anchor=west] at (5, 0.33) {$\#6 := C.5$};
+    \node[anchor=west] at (5, 0)    {$\#7 := A.2$};
+    \node[anchor=west] at (5,-0.33) {$\#8 := C.3$};
+
+    \begin{scope}[xshift=2cm,yshift=2.66cm]    
+    \node[anchor=west,red] at (5,-0.66) {$\#9 := \# 4; \overline{\# 2}$};
+    \node[anchor=west] at (5,-1) {$\#10 := \overline{\# 9}; \# 5$};
+    \node[anchor=west,red] at (5,-1.33) {$\#11 := \# 6; \overline{\# 8}$};
+    \node[anchor=west] at (5,-1.66) {$\#12 := \# 10 ; \# 11$};
+    \node[anchor=west] at (5,-2) {$\#13 := \# 8 ; \# 11$};
+    \node[anchor=west] at (5,-2.33) {$\#14 := \overline{\# 11} ; \# 7$};
+    \end{scope}
+
+    \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
+    \node[anchor=west,lightgray] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west] at (10.5, 0) {$\beta \xrightarrow[\#12]{D} \gamma \xleftarrow[\#3]{D} \gamma$};
+  \end{scope}
+\end{tikzpicture}
+
+  \vspace{0.25cm}
+  \hrule
+  \vspace{0.25cm}
+  
+  \begin{tikzpicture}[scale=1]      % STEP 3
+    \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.125);
+    
+   \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
+    \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
+    
+    \draw (G) edge[red, dotted, ->] node[above left=-2mm, very near start] {\# 9} (K);
+    \draw (B) edge[red, dotted, ->] node[above right=-2mm, near start] {\# 11} (R);
+    \draw (K) edge[red, dotted, ->] node[above=-1mm] {\# 15} (R);
+    
+%   \draw (B) edge[->, loop right] node[right,align=center] {$C$ \\ $\#6$} ();
+%   \draw (G) edge[->] node[left,align=center] {$B$ \\ $\#4$} (R);
+%   \draw (R) edge[->, bend left] node[near start, above right=-1mm] {$C$} node[near start, below left=-1mm] {$\#8$} (B);
+%   \draw (B) edge[->, bend left] node[near start, below left=-1mm] {$\#7$} node[near start, above right=-1mm] {$A$} (R);
+%   \draw (K) edge[->] node[right=-0.5mm, align=center] {$D$ \\ \# 10} (B);
+%   \draw (K) edge[->] node[above=-0.5mm, near start] {$B$} node[below=-0.5mm, near start] {\#2} (R);
+    
+    \draw (R) edge[->, loop left] node[left,align=center] {$D$ \\ $\#3$} ();
+    \draw (R) edge[->, loop above] node[above=-1mm,align=center] {$C$ \\ \# 13} ();
+    \draw (R) edge[->, loop below] node[below=-0.5mm,align=center] {$A$ \\ \# 14} ();
+%    \draw[->] (start.north west) .. controls (3.5, 3) and (0.5, 3) .. node[above=-0.5mm] {$A$} node[below] {\# 16} (R.north east);      
+    \draw[->] (R.south west) .. controls (-2, 0.5) and (-2, 3.5) .. node[left=-0.5mm, align=center] {$B$ \\ \# 17} (R.north west);
+
+    
+    \begin{scope}[xshift=-1.5cm,yshift=0.75cm]
+    \node[anchor=west] at (5, 2)    {$\#1 := A.4$};
+    \node[anchor=west] at (5, 1.66) {$\#2 := B.1$};
+    \node[anchor=west] at (5, 1.33) {$\#3 := D.1$};
+    \node[anchor=west] at (5, 1)    {$\#4 := B.2$};
+    \node[anchor=west] at (5, 0.66) {$\#5 := D.3$};
+    \node[anchor=west] at (5, 0.33) {$\#6 := C.5$};
+    \node[anchor=west] at (5, 0)    {$\#7 := A.2$};
+    \node[anchor=west] at (5,-0.33) {$\#8 := C.3$};
+    
+    \begin{scope}[xshift=2cm,yshift=2.66cm]
+      \node[anchor=west,red] at (5,-0.66) {$\#9 := \# 4; \overline{\# 2}$};
+      \node[anchor=west] at (5,-1) {$\#10 := \overline{\# 9}; \# 5$};
+    \node[anchor=west,red] at (5,-1.33) {$\#11 := \# 6; \overline{\# 8}$};
+    \node[anchor=west] at (5,-1.66) {$\#12 := \# 10 ; \# 11$};
+    \node[anchor=west] at (5,-2) {$\#13 := \# 8 ; \# 11$};
+    \node[anchor=west] at (5,-2.33) {$\#14 := \overline{\# 11} ; \# 7$};
+    \node[anchor=west,red] at (5,-2.66) {$\#15 := \#12; \overline{\# 3}$};
+    \node[anchor=west] at (5,-3) {$\#16 := \#1; \# 15$};
+    \node[anchor=west] at (5,-3.33) {$\#17 := \overline{\# 15}; 2$};
+    \end{scope}
+
+    \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
+    \node[anchor=west,lightgray] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west,lightgray] at (10.5, 0) {$\beta \xrightarrow[\#12]{D} \gamma \xleftarrow[\#3]{D} \gamma$};
+    \node[anchor=west] at (10.5, -0.75) {$\alpha \xrightarrow[\# 16]{A} \gamma \xleftarrow[\# 14]{A} \gamma$};
+  \end{scope}
+\end{tikzpicture}
+
+  \vspace{0.25cm}
+  \hrule
+  %\vspace{0.25cm}
+  
+  \begin{tikzpicture}[scale=1]      % STEP 4 (final)
+    \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.25);
+
+    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
+    \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
+    \node[draw,semitransparent,fill=orange] at (3, 2) (start) {$\alpha$};
+    
+    \draw (G) edge[red, dotted, ->] node[above left=-2mm, very near start] {\# 9} (K);
+    \draw (B) edge[red, dotted, ->] node[above right=-2mm, near start] {\# 11} (R);
+    \draw (K) edge[red, dotted, ->] node[above=-1mm] {\# 15} (R);
+    \draw[red,dotted,->] (start.north west) .. controls (2.5, 3) and (0.5, 3) .. node[above=-0.5mm] {\# 18} (R.north east);      
+
+    
+%   \draw (B) edge[->, loop right] node[right,align=center] {$C$ \\ $\#6$} ();
+%   \draw (G) edge[->] node[left,align=center] {$B$ \\ $\#4$} (R);
+%   \draw (R) edge[->, bend left] node[near start, above right=-1mm] {$C$} node[near start, below left=-1mm] {$\#8$} (B);
+%   \draw (B) edge[->, bend left] node[near start, below left=-1mm] {$\#7$} node[near start, above right=-1mm] {$A$} (R);
+%   \draw (K) edge[->] node[right=-0.5mm, align=center] {$D$ \\ \# 10} (B);
+%   \draw (K) edge[->] node[above=-0.5mm, near start] {$B$} node[below=-0.5mm, near start] {\#2} (R);
+    
+    \draw (R) edge[->, loop left] node[left,align=center] {$D$ \\ $\#3$} ();
+    \draw (R) edge[->, loop above] node[above=-1mm,align=center] {$C$ \\ \# 13} ();
+    \draw (R) edge[->, loop below] node[below=-0.5mm,align=center] {$A$ \\ \# 14} ();
+    \draw[->] (R.south west) .. controls (-2, 0.5) and (-2, 3.5) .. node[left=-0.5mm, align=center] {$B$ \\ \# 17} (R.north west);
+    
+    \begin{scope}[xshift=-1.5cm,yshift=0.75cm]
+    \node[anchor=west] at (5, 2)    {$\#1 := A.4$};
+    \node[anchor=west] at (5, 1.66) {$\#2 := B.1$};
+    \node[anchor=west] at (5, 1.33) {$\#3 := D.1$};
+    \node[anchor=west] at (5, 1)    {$\#4 := B.2$};
+    \node[anchor=west] at (5, 0.66) {$\#5 := D.3$};
+    \node[anchor=west] at (5, 0.33) {$\#6 := C.5$};
+    \node[anchor=west] at (5, 0)    {$\#7 := A.2$};
+    \node[anchor=west] at (5,-0.33) {$\#8 := C.3$};
+
+    \begin{scope}[xshift=2cm,yshift=2.66cm]
+    \node[anchor=west,red] at (5,-0.66) {$\#9 := \# 4; \overline{\# 2}$};
+    \node[anchor=west] at (5,-1) {$\#10 := \overline{\# 9}; \# 5$};
+    \node[anchor=west,red] at (5,-1.33) {$\#11 := \# 6; \overline{\# 8}$};
+    \node[anchor=west] at (5,-1.66) {$\#12 := \# 10 ; \# 11$};
+    \node[anchor=west] at (5,-2) {$\#13 := \# 8 ; \# 11$};
+    \node[anchor=west] at (5,-2.33) {$\#14 := \overline{\# 11} ; \# 7$};
+    \node[anchor=west,red] at (5,-2.66) {$\#15 := \#12; \overline{\# 3}$};
+    \node[anchor=west] at (5,-3) {$\#16 := \#1; \# 15$};
+    \node[anchor=west] at (5,-3.33) {$\#17 := \overline{\# 15}; 2$};
+    \node[anchor=west,red] at (5,-3.66) {$\#18 := \#16; \overline{\# 14}$};
+    \end{scope}
+  
+    \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
+    \node[anchor=west,lightgray] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west,lightgray] at (10.5, 0) {$\beta \xrightarrow[\#12]{D} \gamma \xleftarrow[\#3]{D} \gamma$};
+    \node[anchor=west,lightgray] at (10.5, -0.75) {$\alpha \xrightarrow[\# 16]{A} \gamma \xleftarrow[\# 14]{A} \gamma$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\caption{Step-by-step illustration of the construction of an exit path. The plain
+  edges are ``hot''. The dotted edges represent are the extra spanning edges). \label{fig:path-finding}}
+\end{figure}
+
 
 
 
