@@ -17,6 +17,9 @@
 \usetikzlibrary{quotes}
 \usetikzlibrary{calc}
 
+\tikzset{wire/.style={draw, inner sep=0, minimum size=0.5cm}}
+\tikzset{every edge/.style={shorten >=0.5mm, draw}}
+
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 
 \newcommand{\bits}{\left\{0, 1\right\}}
@@ -35,11 +38,14 @@
 \title{\textsc{MIDTERM} Is a Deterministic Technique to Exit Recursive Mazes}
 
 \author{Charles Bouillaguet}{LIP6 laboratory, Sorbonne Université, Paris, France}{charles.bouillaguet@lip6.fr}{https://orcid.org/0000-0001-9416-6244}{} 
-\author{Orel Cosseron}{Independent researcher}{orel.cosseron@provider.com}{https://orcid.org/0000-0001-9481-8935}{}
+\author{Orel Cosseron}{Independent researcher}{orel.cosseron@ens-lyon.fr}{https://orcid.org/0000-0001-9481-8935}{}
 
 \authorrunning{C. Bouillaguet and O. Cosseron}
 
 \Copyright{Charles Bouillaguet and Orel Cosseron}
+
+\ccsdesc[500]{Theory of computation~Grammars and context-free languages}
+\ccsdesc[500]{Theory of computation~Graph algorithms analysis}
 
 % \ccsdesc[100]{Theory of computation~Computational complexity and cryptography}
 % \ccsdesc[100]{Theory of computation~Design and analysis of algorithms}% Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
@@ -69,9 +75,9 @@
   represented by a deterministic pushdown automaton. Finding a path, possibly
   the shortest, that leads to an exit therefore reduces to finding a word in a
   context-free language described by such an automaton. The problem is
-  well-known to be decidable, and there is a well-known, ``classical'' algorithm
-  for this task. We present a new algorithm, \textsc{Midterm}, with improved
-  complexity compared to existing solutions.
+  well-known to be decidable, and there is a classical algorithm for this
+  task. We present a new algorithm, \textsc{Midterm}, with improved complexity
+  compared to existing solutions.
 
   \textsc{Midterm} improves on a previous attempt, called \textsc{Longterm}
   (Obviously Not a Good Technique to Exit Recursive Mazes).
@@ -85,8 +91,16 @@ often been called ``fractal mazes'' on the internet. Because a picture is worth
 a thousand words, the concept is better illustrated by Figures~\ref{fig:jpwolf}
 and~\ref{fig:later}. Recursive mazes are a notoriously difficult kind of puzzle
 to solve by hand, without taking notes and/or using an \textit{ad hoc} computer
-program to track one's position in the maze. Several such program exist, but we
-mention for instance \url{https://amurielagi.github.io/fractal-maze/}.
+program to track one's position in the maze. Several such program exist, such as
+\begin{center}
+  \url{https://amurielagi.github.io/fractal-maze/}
+\end{center}
+or
+\begin{center}
+  \verb|\begin{shameless-advertisement}| \hspace{5cm}~\\
+    \hspace{2cm}\url{https://orelcosseron.github.io/fractal-maze/}\\
+  \verb|\end{shameless-advertisement}| \hspace{5cm}~
+\end{center}
 
 \begin{figure}
   \includegraphics[width=0.59\textwidth]{FractalMaze95.png}
@@ -604,7 +618,7 @@ exit. Fig.~\ref{fig:convert} shows how. Interestingly, we do not know how to
 make the conversion the other way around. The obvious attempt (shown in
 Fig.~\ref{fig:convert-bad}) fails, because it creates extra connections between
 wires that may lead to spurious solutions. For instance, it allows to escape the
-``innocent-looking'' unescapable maze shown above.
+unescapable ``innocent-looking'' maze shown above.
 
 \begin{figure}
   \centering
@@ -768,12 +782,18 @@ maze on the left of Fig.~\ref{fig:simple}).
   \draw[ultra thick] (11, 7.25) +(-0.1, 0) -- +(0.1, 0) node[right] {1};
 \end{tikzpicture}
 \hfill
-  \begin{tikzpicture}[scale=1.25]
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
-    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
-    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
-    \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
+\begin{tikzpicture}[scale=1.25]
+  \node[draw,minimum size=6mm] at (0, 2) (R) {};
+  \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
+  
+  \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+  \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
+  
+  \node[draw,minimum size=6mm] at (2, 0) (B) {};
+  \node[draw,minimum size=6mm] at (2, 2) (K) {};
+  \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
+  \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
+  
     
     \draw (start) edge[->] node[above] {$A.4$} (K);
 
@@ -788,7 +808,7 @@ maze on the left of Fig.~\ref{fig:simple}).
     \draw (R) edge[->, bend left] node[right] {$C.3$} (B);
   \end{tikzpicture}
   
-  \caption{A simple maze of our own design (left) and its ``dual'' representation (right). \label{fig:simple}}
+  \caption{A simple maze of our own design (left) and its ``dual'' representation (right). Wires with a double-box are ``accepting'' (connected to an outer IO pin). \label{fig:simple}}
 \end{figure}
 
 After presenting some context, we review in section~\ref{sec:shelf} the
@@ -798,9 +818,13 @@ the maze. It runs in time $\bigO{W^2EB}$. In section~\ref{sec:modelchecking}, we
 review improved algorithms to decide reachability of arbitrary states in
 pushdown automata, that yield a faster decision procedure with complexity
 $\bigO{\mathcal{W}^3}$. Finally, in section~\ref{sec:us} we present a new
-deterministic algorithm that terminates in time $\bigO{WB + E \log E}$,
-improving the state of the art. Doing this in linear time is posed as an
-intriguing open problem.
+deterministic algorithm that terminates in time $\bigO{WB + E \alpha(W)}$, where
+$\alpha$ is the inverse-Ackermann function, improving the state of the art. We
+discuss how to bring this down to $\bigO{E \log E}$, but this seems to either
+require: a) cheating, or b) randomization.
+
+Doing this in linear time, e.g. $\bigO{W + B + E}$ is posed as an intriguing
+open problem.
 
 \section{Topological representation of recursive mazes}
 
@@ -816,7 +840,7 @@ the wires of the simple maze shown on the left of Fig.~\ref{fig:simple} are:
 \[
   \{\texttt{start}, A.4\}, 
   \{4, B.1\}, 
-  \{1, 2, C.2, D.1\},
+  \{1, 2, C.3, D.1\},
   \{3, 5, A.2, C.5\}, 
   \{D.2, B.2\}
 \]
@@ -825,16 +849,17 @@ This completely represents the maze, and can easily be encoded as a text
 file. The size of this text file is a good measure of the size of the maze. Note
 that a recursive maze is therefore a hypergraph whose vertices are the
 endpoints.  It even seems legitimate to consider this as ``the'' abstract
-description of the maze. Note that in principle each outer IO pin must appear in
-one and only one wire for the maze to be well-formed.
+description of the maze. Note that in principle each endpoint must appear in at
+most one wire, and each outer IO pin must appear in exactly one wire for
+the maze to be well-formed. This implies that $E \leq BP$ and $W \leq P$.
 
-However, an alternate, ``dual'' description is also useful
-(Fig.~\ref{fig:simple}, right): it is a directed graph whose nodes are the wires
-of the maze, and where there is a directed edge $\alpha \xrightarrow{X.i} \beta$
-if it is possible to go from wire $\alpha$ to wire $\beta$ by entering the
-recursive box labelled $X$ using its pin labelled $i$. We denote by $E$ the
-number of edges of this graph. The dual representation graph can be assembled in
-essentially linear time from the previous ``hypergraph'' representation:
+An alternate, ``dual'' description is also useful (Fig.~\ref{fig:simple},
+right): it is a directed graph whose nodes are the wires of the maze, and where
+there is a directed edge $\alpha \xrightarrow{X.i} \beta$ if it is possible to
+go from wire $\alpha$ to wire $\beta$ by entering the recursive box labelled $X$
+using its pin labelled $i$. As before, $E$ denotes the number of edges of this
+graph. The dual representation graph can be assembled in essentially linear time
+from the previous ``hypergraph'' representation:
 \begin{itemize}
 \item First, associate each outer pin to the wire that contains it.
 \item Initialize an empty directed graph $G$ on the wires.
@@ -846,6 +871,89 @@ essentially linear time from the previous ``hypergraph'' representation:
   \end{itemize}
 \end{itemize}
 
+It follows from the well-formedness conditions that all edge labels are distinct
+in the dual representation graph. The original ``hypergraph'' representation can
+be reassembled from the dual representation graph, under the assumption that the
+initial location (\texttt{start}) is always incident to the wire $\alpha$. An
+edge $\alpha \xrightarrow{X.i} \beta$ means that the outer IO pin $i$ belongs to
+wire $\beta$, and that $X.i$ belongs to wire $\alpha$. By convention, the
+starting point (\texttt{start}) belongs to wire $\alpha$.
+
+% non-minimality
+Nothing prevent several outer IO pins to belong to the same wire. In the simple
+maze of Fig.~\ref{fig:simple}, $(1, 2)$ and $(3, 5)$ are connected. But is this
+really necessary? When two outer IO pins belong to the same wire, couldn't we
+remove one of them (and redirect connections to the other one)? To answer this
+question, take the dual representation graph and \emph{erase} all pin
+information:
+
+\begin{center}
+\begin{tikzpicture}[scale=1]
+  \node[draw,minimum size=6mm] at (0, 2) (R) {};
+  \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
+  
+  \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+  \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
+  
+  \node[draw,minimum size=6mm] at (2, 0) (B) {};
+  \node[draw,minimum size=6mm] at (2, 2) (K) {};
+  \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
+  \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
+  
+    
+    \draw (start) edge[->] node[above] {$A.i$} (K);
+
+    \draw (K) edge[->] node[above] {$B.j$} (R);
+
+    \draw (B) edge[->, loop right] node[right] {$C.k$} ();
+    \draw (B) edge[->, bend left] node[right] {$A.\ell$} (R);
+    \draw (G) edge[->] node[below] {$D.m$} (B);
+
+    \draw (R) edge[->, loop left] node[left] {$D.n$} (R);
+    \draw (G) edge[->] node[left] {$B.o$} (R);
+    \draw (R) edge[->, bend left] node[right] {$C.p$} (B);
+  \end{tikzpicture}
+\end{center}
+
+Then formulate the constraints:
+\begin{itemize}
+\item Different wires are not ``inadvertently'' connected to the same outer IO
+  pins. This means that $\{i\}, \{j, n, o\}$, $\{p, m, k\}$ must be pairwise disjoint.
+\item Labels must be unique. This means that inside the following sets, values are all different: $\{i, \ell\}, \{j, o\}, \{p, k\}$ and $\{n, m\}$.
+\end{itemize}
+The problem of assigning integer values in $\{1, \dots, N\}$, to the variables,
+for the smallest possible $N$, can be seen as a variant of the
+\textsc{Colorability} problem, but it is an easy one. A simple algorithm will
+satisfy the constraints using the minimum possible number of values: first
+compute a ``local'' assignment of values to the unknowns for each disjoint
+subset in isolation ; then form a global assignment by ``shifting'' values
+already used in previous subsets.  For instance, in the example above,
+satisfying the inequality constraints inside each disjoint subset leads to:
+\begin{align*}
+  i &\leadsto 1 \\
+  j, n, o &\leadsto (1, 1, 2) \\
+  p, m, k &\leadsto (1, 1, 2)
+\end{align*}
+Then assembling all disjoint subsets leads to:
+\[
+  (i), (j, n, o), (p,m,k) \leadsto (1), (2,2,3), (4,4,5)
+\]
+Therefore, the simple maze discussed above cannot be simplified further: at
+least 5 outer IO pins are necessary (and sufficient). Let the disjoint subsets
+be $A_1, \dots, A_k$, and the all-different ones be $B_1, \dots, B_\ell$ (note
+that the $B_j$'s are also disjoint, because they correspond to different boxes).
+Then inside a disjoint subset $A_i$, the variables in $A_i \cap B_j$ must be all
+different, for each $j$. Therefore, $\min_j |A_i \cap B_j|$ values are necessary
+(and sufficient) for $A_i$.
+
+Let us next look at the small maze on the right of Fig.~\ref{fig:jpwolf}. We
+number its pins from 0 to f clockwise (0,1,2,3 at the north, 4, 5, 6, 7 on the
+east side, 8,9,a,b at the south and c,d,e,f at on the west side). Pin 1 is
+clearly a decoy: nothing is connected to either $A.1$, $B.1$ or $C.1$. Next,
+pins 0, $e$ and $f$ belong to the same wire, but one of them is redundant. There
+are connections to $A.0, B.0, C.0, C.e, A.f$ and $B.f$, therefore ``merging''
+$e$ and $f$ is possible without creating extra connections. We assume that these
+extra pins are present for aesthetic reasons.
 
 \section{Recursive mazes as pushdown automata}
 
@@ -896,17 +1004,17 @@ writes:
 
 Making this intuition precise is easier with the dual representation graph of
 recursive mazes. We assume that there is an initial wire (denoted as $\alpha$)
-where the player starts. The position of the player is made of a current wire
+where the player starts. The position of the player consists of a current wire
 and a stack of entered boxes. We write such a position as ``wire | stack'' or
 ``$\frac{\text{wire}}{\text{stack}}$''. The stack is initialized with the
-identifier of the ``main'' box that contains everything, which is denoted by
+identifier of the ``main'' box that contains everything, which is denoted as
 $\bot$. Moving between wires pushes box identifiers on the stack (when a box is
 entered), or pops them (when a box is left). Entering box $X$ is always possible
 (if there is a wire leading to it of course), but exiting box $X$ only makes
 sense if we are currently inside it.  The possible transitions from a given
 state are thus entirely determined by the top of the stack. If there is an edge
 $\phi \xrightarrow{X.i} \psi$ in the dual representation of the maze, then the
-player may move between positions $\phi | S$ and $\psi | X.S$ (both ways) by
+player may move between positions $\phi | S$ and $\psi | X ; S$ (both ways) by
 issuing $X.i$ or $\overline{X.i}$.
 
 We can therefore describe a deterministic pushdown automaton (DPDA) for the
@@ -953,13 +1061,132 @@ $\displaystyle
 $}%
 \end{center}
 
-As a consequence, the sequences of instruction that exit the maze form a
+As a consequence, the sequences of instructions that exit the maze form a
 (deterministic) context-free language. We note that there are off-the-shelf
 software libraries to test reachability of configurations in pushdown automata
 such as \textsf{Moped}~\cite{DBLP:phd/dnb/Schwoon02} or
-\textsf{PDAAAL}~\cite{DBLP:conf/atva/JensenSSS22} (to just mention a few) that
+\textsf{PDAAAL}~\cite{DBLP:conf/atva/JensenSSS22} (just to mention a few) that
 can therefore be used to solve recursive mazes.
 
+\section{Construction of mazes with an exit path of a prescribed length}
+
+The dual representation of recursive mazes can be useful as a design tool. For
+instance, we highlight the conception of mazes where the exit path has a
+prescribed length. This length must be odd (because each entered box must be
+exited, and there is \texttt{done} at the end).  For instance, suppose we would
+like to build a maze with a path of length 1337 (a random \texttt{leet}
+value). We start from a a \emph{twisted addition chain} for 1335:
+\begin{align*}
+  5 &= 1 + (1+1) + (1+1) \\
+  19 &= 1 + (5+1) + (5+1) + (5+1) \\
+  101 &= 1 + (19+1) + (19+1) + (19+1) + (19+1) + (19+1) \\
+  307 &= 1 + (101+1) + (101+1)+ (101+1) \\
+  1335 &= 1 + (101+1) + (307+1) + (307+1) + (307+1) + (307+1)
+\end{align*}
+And we build the following graph (pins were assigned using the algorithm outlined above):
+
+\begin{center}
+\begin{tikzpicture}[xscale=1.33]
+  \node[wire,fill=orange] at (0, 0) (alpha) {$\alpha$};
+  \draw (alpha) edge[loop below] node[below] {$A.1$} ();
+  
+  \node[minimum size=6mm, draw] at (1, -2) (upsilon) {};
+  \node[wire, draw] at (1, -2) {$\upsilon$};
+  \draw (upsilon) edge[->] node[near start, above right=-1mm] {$F.2$} (alpha);
+
+  % chain for A/B 2
+  \node[wire,fill=Orchid,text=white] at (-2, 0) (beta) {$\beta$};
+  \node[wire,fill=red,text=white] at (-3, 0) (gamma) {$\gamma$};
+  \draw (beta) edge[->] node[above,very near start] {$A.2$} (alpha);
+  \draw (gamma) edge[->] node[above] {$A.3$} (beta);
+  \draw (gamma) edge[->, bend right] node[below, very near start] {$B.1$} (alpha);
+  
+  % chain for B/C 3
+  \node[wire,fill=Orchid,text=white] at (-2, 2) (delta) {$\delta$};
+  \node[wire,fill=red,text=white] at (-3, 2) (epsilon) {$\epsilon$};
+  \node[wire,fill=red,text=white] at (-4, 2) (zeta) {$\zeta$};
+  \draw (delta) edge[->] node[above right=-1mm,very near start] {$B.2$} (alpha);
+  \draw (epsilon) edge[->] node[above] {$B.3$} (delta);
+  \draw (zeta) edge[->] node[above] {$B.4$} (epsilon);
+  \draw (zeta) edge[->] node[below,near start] {$C.1$} (alpha);
+
+  % chain for C/D 5
+  \node[wire,fill=Orchid,text=white] at (0, 2) (eta) {$\eta$};
+  \node[wire,fill=red,text=white] at (1, 2) (theta) {$\theta$};
+  \node[wire,fill=red,text=white] at (2, 2) (iota) {$\iota$};
+  \node[wire,fill=red,text=white] at (3, 2) (kappa) {$\kappa$};
+  \node[wire,fill=red,text=white] at (4, 2) (lambda) {$\lambda$};
+  \draw (lambda) edge[->] node[above] {$C.6$} (kappa);
+  \draw (kappa) edge[->]  node[above] {$C.5$} (iota);
+  \draw (iota) edge[->]   node[above] {$C.4$} (theta);
+  \draw (theta) edge[->]  node[above] {$C.3$} (eta);
+  \draw (eta) edge[->]    node[left,very near start] {$C.2$} (alpha);
+  \draw (lambda) edge[->] node[below right=0mm, very near start] {$D.1$} (alpha);
+
+  % chain for D/E 3
+  \node[wire,fill=Orchid,text=white] at (-1, -2) (mu) {$\mu$};
+  \node[wire,fill=red,text=white] at (-2, -2) (nu) {$\nu$};
+  \node[wire,fill=red,text=white] at (-3, -2) (xi) {$\xi$};
+  \draw (xi) edge[->] node[below] {$D.4$} (nu);
+  \draw (nu) edge[->] node[below] {$D.3$} (mu);
+  \draw (mu) edge[->] node[right=0mm,near start] {$D.2$} (alpha);
+  \draw (xi) edge[->] node[above left=-1mm, very near start] {$E.1$} (alpha);
+
+  % chain for D/E/F 4
+  \node[wire,fill=Orchid,text=white] at (2, 0) (omicron) {$o$};
+  \node[wire,fill=red,text=white] at (3, 0) (pi) {$\pi$};
+  \node[wire,fill=red,text=white] at (4, 0) (rho) {$\rho$};
+  \node[wire,fill=red,text=white] at (5, 0) (sigma) {$\sigma$};
+  \node[wire,fill=red,text=white] at (6, 0) (tau) {$\tau$};
+
+  \draw (omicron) edge[->] node[above,very near start] {$D.5$} (alpha);
+  \draw (pi) edge[->] node[above] {$E.2$} (omicron);
+  \draw (rho) edge[->] node[above] {$E.3$} (pi);
+  \draw (sigma) edge[->] node[above] {$E.4$} (rho);
+  \draw (tau) edge[->] node[above] {$E.5$} (sigma);
+  \draw (tau) edge[->, bend left] node[below=0mm, near start] {$F.1$} (alpha);
+\end{tikzpicture}
+\end{center}
+
+The resulting maze has 6 pins, 6 recursive boxes and 20 wires.
+% Starting from $\alpha$, the self-loop enables entering arbitrarily many times
+% the $A$ box (in 1 move), so entering $A$ costs 1. When $A$ has been entered 2
+% times, it is possible to land on wire $\alpha$ inside box $B$, in 5 moves (so
+% $B$ represents 7). Once $B$ has been entered 3 times, we can land on wire
+% $\alpha$ inside box $C$, in 19 moves in total (so $C$ represents 19). Etc..
+An exit path is provided by:
+\begin{align*}
+  \mathcal{P}_5    &:= A.1 ; A.1; \overline{A.2}; \overline{A.3}; B.1 \\
+  \mathcal{P}_{19}  &:= \left(\mathcal{P}_5\right)^3 ; \overline{B.2}; \overline{B.3};  \overline{B.4}; C.1 \\
+  \mathcal{P}_{101} &:= \left(\mathcal{P}_{19}\right)^5 ; \overline{C.2}; \overline{C.3};  \overline{C.4}; \overline{C.5};  \overline{C.6}; D.1 \\
+  \mathcal{P}_{307} &:= \left(\mathcal{P}_{101}\right)^3 ; \overline{D.2}; \overline{D.3};  \overline{D.4}; E.1 \\
+  \mathcal{P}_{1335}&:= \left(\mathcal{P}_{101}\right); \left(\mathcal{P}_{307}\right)^4; \overline{E.2};  \overline{E.3}; \overline{E.4};  \overline{E.5}; F.1 \\
+  \mathcal{P}_{1337}&:= \left(\mathcal{P}_{1335}\right); \overline{F.2}; \texttt{done}
+\end{align*}
+It is left to the reader to check that $\mathcal{P}_x$ has length $x$. We also
+hope that, at this point, the role of the ``twisted addition chains'' has become
+clear. A Twisted addition chain is a sequence of equalities of the kind
+$a_{i+1} = [\text{sum of $k$ previous $a_i$'s}] + (k+1)$, starting with
+$a_0 = 1$. The number of pins of the maze is the maximum number of occurrences
+of any given value in the twisted addition chain. The number of recursive boxes
+is the number of steps of the twisted addition chain. The number of wires is two
+plus the total number of occurrences of all constants in right-hand sides of the
+twisted addition chain.
+
+The alternative twisted addition chain:
+\begin{align*}
+  3 &= 1 + (1+1) \\
+  9 &= 1 + (3+1) + (3+1) \\
+  21 &= 1 + (9+1) + (9+1) \\
+  45 &= 1 + (21+1) + (21+1) \\
+  93 &= 1 + (45+1) + (45+1) \\
+  189 &= 1 + (93+1) + (93+1) \\
+  571 &= 1 + (189+1) + (189+1) + (189+1) \\
+  1335 &= 1 + (189+1) + (571+1) + (571+1)
+\end{align*}
+leads to a different maze with 8 recursive boxes, 5 pins and only 19
+wires. There is a rich theory of normal addition chains (see~\cite{Knuth}), and
+the twisted ones beg for the same level of attention.
 
 \section{Languages associated to recursive mazes}
 
@@ -1019,7 +1246,6 @@ Any Dyck language can be accepted by a recursive maze, as illustrated below for 
 \end{tikzpicture}
 \end{center}
 
-\tikzset{wire/.style={draw, inner sep=0, minimum size=0.5cm}}
 
 So, $h(\mathcal{L})$ is a subset of a Dyck language, but not any subset: it is
 contained in a \emph{regular} language derived from the maze. Imagine that the
@@ -1029,7 +1255,7 @@ edge add a ``mirror'' edge with the mirror instruction and keep only the box
 label, erasing the pin label on instructions. For instance, with the simple
 recursive maze of Fig.~\ref{fig:simple}:
 \begin{center}
-\begin{tikzpicture}[scale=1.25, every edge/.style={shorten >=0.5mm, draw}]
+\begin{tikzpicture}[scale=1.25]
   \node[draw,minimum size=6mm] at (0, 2) (R) {};
   \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
 
@@ -2410,7 +2636,8 @@ We the rewriting process is over, the spanning edge form (rooted) spanning trees
 of the connected components. Therefore, when a pair of nodes are reachable by a
 path, this path can be assembled by following the spanning edges.
 
-Compared to Algorithm~\ref{algo:main}, this requires the following modifications:
+Compared to Algorithms~\ref{algo:main-dense} and~\ref{algo:main-sparse}, this
+requires the following modifications:
 \begin{itemize}
 \item Not only the target, but also the origin of hot edges incident to an
   ``absorbed'' node must be modified. This requires each node to we aware not
@@ -2759,6 +2986,9 @@ We leave the problem of producing a minimal-length exit path open for future wor
 \end{figure}
 
 
+\section{Conclusion}
+
+Looking forward, we see many interesting problems related to awaiting for a solution, 
 
 
 \bibliography{biblio}
