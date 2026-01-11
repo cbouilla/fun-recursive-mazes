@@ -574,18 +574,18 @@ or 4, in which condition the goal was already reachable. Therefore, the target
 cannot be reached.
 
 \begin{figure}
-  \begin{multicols}{2}
-  \includegraphics[width=0.48\textwidth]{infinite_descent.pdf}
-  \columnbreak
-%\hfill
-  \includegraphics[width=0.48\textwidth]{first_cantor.pdf}
-\end{multicols}
-\caption{Two unsolvable recursive mazes by Tristan ``Siggy'' Miller (published
-  on October 2023 on the
-  \href{https://freethoughtblogs.com/atrivialknot/2023/10/21/infinite-fractal-mazes/}{Freethought
-    blogs}). On the right, the goal is to reach the ``F''. These mazes are
-  unsolvable with the normal rules, but what if one allows transfinite
-  moves? \label{fig:infinite}}
+%  \begin{multicols}{2}
+  \includegraphics[width=0.47\textwidth]{infinite_descent.pdf}
+%  \columnbreak
+\hfill
+  \includegraphics[width=0.47\textwidth]{first_cantor.pdf}
+%\end{multicols}
+  \caption{Two unsolvable recursive mazes by Tristan ``Siggy'' Miller (published
+    on October 2023 on the
+    \href{https://freethoughtblogs.com/atrivialknot/2023/10/21/infinite-fractal-mazes/}{Freethought
+      blogs}). On the right, the goal is to reach the ``F'' from any outer IO
+    pin. These mazes are unsolvable with the normal rules, but what if one
+    allows transfinite moves? \label{fig:infinite}}
 \end{figure}
 
 
@@ -881,10 +881,10 @@ starting point (\texttt{start}) belongs to wire $\alpha$.
 
 % non-minimality
 Nothing prevent several outer IO pins to belong to the same wire. In the simple
-maze of Fig.~\ref{fig:simple}, $(1, 2)$ and $(3, 5)$ are connected. But is this
-really necessary? When two outer IO pins belong to the same wire, couldn't we
-remove one of them (and redirect connections to the other one)? To answer this
-question, take the dual representation graph and \emph{erase} all pin
+maze of Fig.~\ref{fig:simple}, pins $(1, 2)$ and $(3, 5)$ are connected. But is
+this really necessary? When two outer IO pins belong to the same wire, couldn't
+we remove one of them (and redirect connections to the other one)? To answer
+this question, take the dual representation graph and \emph{erase} all pin
 information:
 
 \begin{center}
@@ -918,8 +918,8 @@ information:
 Then formulate the constraints:
 \begin{itemize}
 \item Different wires are not ``inadvertently'' connected to the same outer IO
-  pins. This means that $\{i\}, \{j, n, o\}$, $\{p, m, k\}$ must be pairwise disjoint.
-\item Labels must be unique. This means that inside the following sets, values are all different: $\{i, \ell\}, \{j, o\}, \{p, k\}$ and $\{n, m\}$.
+  pin. This means that $\{i\}, \{j, n, o\}$, $\{p, m, k\}$ must be pairwise disjoint.
+\item Endpoints appear in a single wire. This means that inside the following sets, values are all different: $\{i, \ell\}, \{j, o\}, \{p, k\}$ and $\{n, m\}$.
 \end{itemize}
 The problem of assigning integer values in $\{1, \dots, N\}$, to the variables,
 for the smallest possible $N$, can be seen as a variant of the
@@ -1324,14 +1324,14 @@ the intersection of a Dyck language and a regular language. This opens up the
 possibility that applying a homomorphism to $\mathcal{L}$ may yield a large
 class of context-free languages.
 
-However, there is going to be a severe restriction. The regular language in the
-intersection must be such that the graph describing the associated finite
-automaton is ``undirected'' (see~\cite{DBLP:journals/acta/KutribMS22} for more
-results on this kind of automata---they are said to be ``dual and
-connected'' in~\cite{STEINBERG2002341}). This highlight a nasty ``feature'' of
-recursive mazes: all moves are reversible. Mistakes can be undone without having
-to hit CTRL+Z, just by entering an appropriate instruction (exit the box that
-has just been entered, or re-enter the box that has just been left).
+However, there is a severe restriction. The regular language in the intersection
+must be such that the graph describing the associated finite automaton is
+``undirected'' (see~\cite{DBLP:journals/acta/KutribMS22} for more results on
+this kind of automata---they are said to be ``dual and connected''
+in~\cite{STEINBERG2002341}). This highlight a nasty ``feature'' of recursive
+mazes: all moves are reversible. Mistakes can be undone without having to hit
+CTRL+Z, just by entering an appropriate instruction (exit the box that has just
+been entered, or re-enter the box that has just been left).
 
 In a valid sequence of instructions, it is possible to insert anywhere an
 arbitrarily long sequence of arbitrary (legal) moves, and then ``undo'' them to
