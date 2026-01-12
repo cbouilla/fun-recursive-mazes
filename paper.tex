@@ -18,6 +18,7 @@
 \usetikzlibrary{calc}
 
 \tikzset{wire/.style={draw, inner sep=0, minimum size=0.5cm}}
+\tikzset{extra box/.style={draw, minimum size=0.6cm}}
 \tikzset{every edge/.style={shorten >=0.5mm, draw}}
 
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
@@ -50,7 +51,7 @@
 % \ccsdesc[100]{Theory of computation~Computational complexity and cryptography}
 % \ccsdesc[100]{Theory of computation~Design and analysis of algorithms}% Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
 
-\keywords{Quantum computing, blockchains, IA, pushdown automaton, reachability, graph rewriting, recursive maze, $(\lambda x. xx)(\lambda x. xx)$}
+\keywords{Quantum computing, blockchains, IA, pushdown automaton, reachability, graph rewriting, addition chains, recursive maze, $(\lambda x. xx)(\lambda x. xx)$}
 
 %\supplement{Source code available at : \url{https://gitlab.lip6.fr/almasty/mq/}}
 
@@ -79,19 +80,24 @@
   task. We present a new algorithm, \textsc{Midterm}, with improved complexity
   compared to existing solutions.
 
-  \textsc{Midterm} improves on a previous attempt, called \textsc{Longterm}
+  \textsc{Midterm} improves on a previous attempt called \textsc{Longterm}
   (Obviously Not a Good Technique to Exit Recursive Mazes).
 \end{abstract}
 
 
 \section{Introduction}
 
-A \emph{recursive maze} is a maze that contains copies of itself. They have
-often been called ``fractal mazes'' on the internet. Because a picture is worth
-a thousand words, the concept is better illustrated by Figures~\ref{fig:jpwolf}
-and~\ref{fig:later}. Recursive mazes are a notoriously difficult kind of puzzle
-to solve by hand, without taking notes and/or using an \textit{ad hoc} computer
-program to track one's position in the maze. Several such program exist, such as
+A \emph{recursive maze} is a maze that contains copies of itself. As the adage
+goes, a picture is worth a thousand words, and the concept is therefore best
+illustrated by Figures~\ref{fig:jpwolf} and~\ref{fig:later}. Recursive mazes
+have been invented by Mark J. P. Wolf (univ. Wisconsin) and the first one was
+published in 1996 under the name ``\emph{fractal maze}'' (\emph{Extropy} \#17,
+p. 67, available in the
+\href{https://archive.org/details/extropy-17/page/66/mode/2up}{internet
+  archive}). Similar puzzles later appeared both in print and online. Recursive
+mazes are notoriously difficult to solve by hand, without taking notes and/or
+using an \textit{ad hoc} computer program to track one's position in the
+maze. Several such program exist, such as
 \begin{center}
   \url{https://amurielagi.github.io/fractal-maze/}
 \end{center}
@@ -105,7 +111,7 @@ or
 \begin{figure}
   \includegraphics[width=0.59\textwidth]{FractalMaze95.png}
   \includegraphics[width=0.39\textwidth]{fractal1.png}
-  \caption{Two early recursive mazes designed by Mark J. P. Wolf. First published in Extropy \#17, Fall 1996, pages 66-67 (left) and in the "Bogglers" column of the June 2004 issue of Discover Magazine, page 86 (right). See also the book~\cite{WolfBook} by the same author. \label{fig:jpwolf}}
+  \caption{Two early recursive mazes designed by Mark J. P. Wolf. First published in \href{https://archive.org/details/extropy-17/page/66/mode/2up}{Extropy \#17, Fall 1996, page 67} (left) and in the "Bogglers" column of the June 2004 issue of Discover Magazine, page 86 (right). See also the book~\cite{WolfBook} by the same author. \label{fig:jpwolf}}
 \end{figure}
 
 \begin{figure}
@@ -783,18 +789,17 @@ maze on the left of Fig.~\ref{fig:simple}).
 \end{tikzpicture}
 \hfill
 \begin{tikzpicture}[scale=1.25]
-  \node[draw,minimum size=6mm] at (0, 2) (R) {};
+  \node[extra box] at (0, 2) (R) {};
   \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
   
   \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
   \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
   
-  \node[draw,minimum size=6mm] at (2, 0) (B) {};
-  \node[draw,minimum size=6mm] at (2, 2) (K) {};
+  \node[extra box] at (2, 0) (B) {};
+  \node[extra box] at (2, 2) (K) {};
   \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
   \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
   
-    
     \draw (start) edge[->] node[above] {$A.4$} (K);
 
     \draw (K) edge[->] node[above] {$B.1$} (R);
@@ -817,14 +822,18 @@ associated to a deterministic pushdown automaton built from the description of
 the maze. It runs in time $\bigO{W^2EB}$. In section~\ref{sec:modelchecking}, we
 review improved algorithms to decide reachability of arbitrary states in
 pushdown automata, that yield a faster decision procedure with complexity
-$\bigO{\mathcal{W}^3}$. Finally, in section~\ref{sec:us} we present a new
-deterministic algorithm that terminates in time $\bigO{WB + E \alpha(W)}$, where
-$\alpha$ is the inverse-Ackermann function, improving the state of the art. We
-discuss how to bring this down to $\bigO{E \log E}$, but this seems to either
-require: a) cheating, or b) randomization.
+$\bigO{\mathcal{W}^3}$. Finally, in section~\ref{sec:us} we discuss a new
+algorithmic technique to compute equivalence classes of wires inside a recursive
+maze. In section~\ref{sec:implem} we discuss the efficient implementation of
+this procedure, and show a version that terminates in time
+$\bigO{WB + E \alpha(W)}$, where $\alpha$ is the inverse-Ackermann function,
+improving the state of the art. We discuss how to bring this down to
+$\bigO{E \log E}$, but this seems to either require: a) cheating, or b)
+randomization. Lastly, in section~\ref{sec:arg}, we discuss how to actually
+construct an exit path (this was the whole point of the paper, isn't it?).
 
-Doing this in linear time, e.g. $\bigO{W + B + E}$ is posed as an intriguing
-open problem.
+``Solving'' recursive mazes in linear time, e.g. $\bigO{W + B + E}$ is left as
+an intriguing open problem.
 
 \section{Topological representation of recursive mazes}
 
@@ -889,18 +898,17 @@ information:
 
 \begin{center}
 \begin{tikzpicture}[scale=1]
-  \node[draw,minimum size=6mm] at (0, 2) (R) {};
+  \node[extra box] at (0, 2) (R) {};
   \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
   
   \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
   \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
   
-  \node[draw,minimum size=6mm] at (2, 0) (B) {};
-  \node[draw,minimum size=6mm] at (2, 2) (K) {};
+  \node[extra box] at (2, 0) (B) {};
+  \node[extra box] at (2, 2) (K) {};
   \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
   \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
   
-    
     \draw (start) edge[->] node[above] {$A.i$} (K);
 
     \draw (K) edge[->] node[above] {$B.j$} (R);
@@ -1087,11 +1095,11 @@ And we build the following graph (pins were assigned using the algorithm outline
 
 \begin{center}
 \begin{tikzpicture}[xscale=1.33]
-  \node[wire,fill=orange] at (0, 0) (alpha) {$\alpha$};
+  \node[wire,fill=orange] at (0, 0) (alpha) {$\tau$};
   \draw (alpha) edge[loop below] node[below] {$A.1$} ();
   
-  \node[minimum size=6mm, draw] at (1, -2) (upsilon) {};
-  \node[wire, draw] at (1, -2) {$\upsilon$};
+%  \node[extra box] at (1, -2) (upsilon) {};
+  \node[wire, draw] at (1, -2) (upsilon) {$\alpha$};
   \draw (upsilon) edge[->] node[near start, above right=-1mm] {$F.2$} (alpha);
 
   % chain for A/B 2
@@ -1148,28 +1156,26 @@ And we build the following graph (pins were assigned using the algorithm outline
 \end{tikzpicture}
 \end{center}
 
-The resulting maze has 15 pins, 6 recursive boxes and 20 wires (with pins = wires + 1 - boxes).
-% Starting from $\alpha$, the self-loop enables entering arbitrarily many times
-% the $A$ box (in 1 move), so entering $A$ costs 1. When $A$ has been entered 2
-% times, it is possible to land on wire $\alpha$ inside box $B$, in 5 moves (so
-% $B$ represents 7). Once $B$ has been entered 3 times, we can land on wire
-% $\alpha$ inside box $C$, in 19 moves in total (so $C$ represents 19). Etc..
-An exit path is provided by:
+The resulting maze has 15 pins, 6 recursive boxes and 20 wires. An exit path is provided by:
 \begin{align*}
-  \mathcal{P}_5    &:= A.1 ; A.1; \overline{A.2}; \overline{A.3}; B.1 \\
-  \mathcal{P}_{19}  &:= \left(\mathcal{P}_5\right)^3 ; \overline{B.2}; \overline{B.3};  \overline{B.4}; C.1 \\
-  \mathcal{P}_{101} &:= \left(\mathcal{P}_{19}\right)^5 ; \overline{C.2}; \overline{C.3};  \overline{C.4}; \overline{C.5};  \overline{C.6}; D.1 \\
-  \mathcal{P}_{307} &:= \left(\mathcal{P}_{101}\right)^3 ; \overline{D.2}; \overline{D.3};  \overline{D.4}; E.1 \\
-  \mathcal{P}_{1335}&:= \left(\mathcal{P}_{101}\right); \left(\mathcal{P}_{307}\right)^4; \overline{E.2};  \overline{E.3}; \overline{E.4};  \overline{E.5}; F.1 \\
-  \mathcal{P}_{1337}&:= \left(\mathcal{P}_{1335}\right); \overline{F.2}; \texttt{done}
+  \mathcal{P}_5    &:= \overline{B.1}; A.3; A.2; \overline{A.1}; \overline{A.1}  \\   % pop B
+  \mathcal{P}_{19}  &:= \overline{C.1}; B.5; B.4;  B.2; \left(\mathcal{P}_5\right)^3 \\  % pop C
+  \mathcal{P}_{101} &:= \overline{D.1}; C.9; C.8; C.7; C.6; C.2; \left(\mathcal{P}_{19}\right)^5  \\ %pop D
+  \mathcal{P}_{307} &:= \overline{E.1}; D.11; D.10; D.2; \left(\mathcal{P}_{101}\right)^3  \\ % pop E
+  \mathcal{P}_{1335}&:= \overline{F.1 }; D.15; E.14; E.13; E.12; E.2; \left(\mathcal{P}_{307}\right)^4; \left(\mathcal{P}_{101}\right) \\ % pop F
+  \mathcal{P}_{1337}&:= F.2; \left(\mathcal{P}_{1335}\right); \texttt{done}
 \end{align*}
-It is left to the reader to check that $\mathcal{P}_x$ has length $x$. We also
-hope that, at this point, the role of the ``twisted addition chains'' has become
-clear. A Twisted addition chain is a sequence of equalities of the kind
+The point is that the sequence of instruction $\mathcal{P}_5$ takes the player
+from wire $\tau$ to wire $\tau$ but exits box $B$. $\mathcal{P}_{19}$ does the
+same with box $C$, $\mathcal{P}_{101}$ with box $D$, etc.  It is left to the
+reader to check that $\mathcal{P}_x$ has length $x$. We also hope that, at this
+point, the role of the ``twisted addition chains'' has become clear. A Twisted
+addition chain is a sequence of equalities of the kind
 $a_{i+1} = [\text{sum of $k$ previous $a_i$'s}] + (k+1)$, starting with
-$a_0 = 1$. The number of recursive boxes is the number of steps of the twisted
+$a_0 = 1$. The number of recursive boxes is one plus the number of steps of the twisted
 addition chain. The number of wires is two plus the total number of occurrences
-of all constants in right-hand sides of the twisted addition chain..
+of all constants in right-hand sides of the twisted addition chain, and pins =
+wires + 1 - boxes.
 
 The alternative twisted addition chain:
 \begin{align*}
@@ -1182,9 +1188,19 @@ The alternative twisted addition chain:
   571 &= 1 + (189+1) + (189+1) + (189+1) \\
   1335 &= 1 + (189+1) + (571+1) + (571+1)
 \end{align*}
-leads to a different maze with 8 recursive boxes, 12 pins and only 19
-wires. There is a rich theory of normal addition chains (see~\cite{Knuth}), and
-the twisted ones beg for the same level of attention.
+leads to a different maze with 9 recursive boxes, 11 pins and only 19
+wires.
+
+Using this strategy with a sequence of ``doubling plus three'' steps only yields
+a variant of the ``power-of-two'' maze shown in Fig.~\ref{fig:power2}. Using a twisted
+addition chain with $k$ steps of the kind $a_{i+1} = 2a_i + 3$ yields a maze
+with $1+k$ boxes, $2+2k$ wires and $2+k$ IO pins. The exit path has length
+$3 \cdot 2^k - 3$. This shows that the length of the exit path can be
+exponential in any of the relevant quantities. 
+
+As a side note, there is a rich theory of normal addition chains
+(see~\cite{Knuth}), and we believe that the twisted ones beg for the same level
+of attention.
 
 \section{Languages associated to recursive mazes}
 
@@ -1254,15 +1270,14 @@ label, erasing the pin label on instructions. For instance, with the simple
 recursive maze of Fig.~\ref{fig:simple}:
 \begin{center}
 \begin{tikzpicture}[scale=1.25]
-  \node[draw,minimum size=6mm] at (0, 2) (R) {};
+  \node[extra box] at (0, 2) (R) {};
   \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
-
   \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
   
-  \node[draw,minimum size=6mm] at (2, 0) (B) {};
+  \node[extra box] at (2, 0) (B) {};
   \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
 
-  \node[draw,minimum size=6mm] at (2, 2) (K) {};
+  \node[extra box] at (2, 2) (K) {};
   \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
 
   \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
@@ -1553,11 +1568,15 @@ dual representation graph with these wormholes, using dashed edges:
 
 \begin{center}
   \begin{tikzpicture}[scale=1.25]
-    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
-    \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
-    \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
-    \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
+    \node[wire,fill=orange] at (4, 2) (start) {$\alpha$};
+    \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    
+    \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
+    \node[draw,minimum size=6mm] at (0, 2) (R) {};
+    \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
+    \node[draw,minimum size=6mm] at (2, 0) (B) {};
+    \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
+    \node[draw,minimum size=6mm] at (2, 2) (K) {};
     
     \draw (start) edge[->] node[above] {$A.4$} (K);
 
@@ -1894,6 +1913,7 @@ case, an exit path can be built explicitly (but how to do so depends on
 implementation details discussed below).
 
 \section{Efficient deterministic implementations}
+\label{sec:implem}
 
 We now discuss the efficient implementation of the graph rewriting process
 discussed above. We assume that everything is represented as word-sized
@@ -2984,9 +3004,9 @@ We leave the problem of producing a minimal-length exit path open for future wor
 \end{figure}
 
 
-\section{Conclusion}
+% \section{Conclusion}
 
-Looking forward, we see many interesting problems related to awaiting for a solution, 
+% Looking forward, we see many interesting problems related to awaiting for a solution, 
 
 
 \bibliography{biblio}
