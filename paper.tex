@@ -97,7 +97,7 @@ p. 67, available in the
   archive}). Similar puzzles later appeared both in print and online. Recursive
 mazes are notoriously difficult to solve by hand, without taking notes and/or
 using an \textit{ad hoc} computer program to track one's position in the
-maze. Several such program exist, such as
+maze. Several such program exist, notably to play in a web browser, such as
 \begin{center}
   \url{https://amurielagi.github.io/fractal-maze/}
 \end{center}
@@ -3004,10 +3004,47 @@ We leave the problem of producing a minimal-length exit path open for future wor
 \end{figure}
 
 
-% \section{Conclusion}
+\section{Conclusion: a daunting open problem}
 
-% Looking forward, we see many interesting problems related to awaiting for a solution, 
+Checking if a context-free language is empty is non only decidable, but can be
+done in polynomial time. For this reason, it was clear from the outset that
+recursive mazes could not pose a major computational problem.
 
+However, checking emptiness of the intersection of \emph{two} context-free
+languages is undecidable (this enables the simulation of an arbitrary Turing
+machine). Therefore, it could very well be that trying to get out of \emph{two}
+recursive mazes simultaneously might be difficult. This problem can be thought
+of as follows: suppose you have an application to play recursive mazes
+(\verb|\begin{shameless-advertisement}|such as the one we designed, available at
+  \url{https://github.com/orelcosseron/Fractal-Maze-Python}\verb|\end{shameless-advertisement}|). In
+such a game, the mazes are orthogonal: paths are either horizontal or
+vertical. The player controls the location of a sprite using arrow keys, as is
+common in ``top down'' adventure games, such as \emph{The Legend of
+  Zelda}. Moving towards a wall does nothing: the sprite cannot cross the
+wall.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.49\textwidth]{screenshot_Alice.png}
+  \includegraphics[width=0.49\textwidth]{screenshot_square.png}
+\end{center}
+\caption{\label{fig:two} Solving two mazes at the same time---with a single
+  keyboard. Is it decidable? The player is represented by a blue dot, and its
+  current path is shown by a blue or red line.}
+\end{figure}
+
+Now suppose that \emph{two} instances of the application are launched, with two
+different mazes, and that \emph{both} applications receive the same keyboard
+inputs (see Fig.~\ref{fig:two}). In the situation shown in the figure, going
+down does nothing; going up moves the sprite in the right maze; going left moves
+the sprite in the left maze; going right moves the sprite in both mazes. Given
+the geometric description of two mazes, the question is to decide if there is a
+(finite) sequence of keyboard inputs that exits both mazes.
+
+It is not completely obvious that this problem is even decidable (we may get
+away with it because of the severe restrictions on the class of context-free
+languages associated to recursive mazes). In any case, this is an exciting
+perspective for future work
 
 \bibliography{biblio}
 
