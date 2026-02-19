@@ -1,9 +1,10 @@
 \documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2021}
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+% this is the "short" 20-pages version
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
-\usepackage{parskip}
+%\usepackage{parskip}
 \usepackage{enumerate}
 \usepackage{xspace}
 %\usepackage{framed}
@@ -69,21 +70,16 @@
 \ccsdesc[500]{Theory of computation~Grammars and context-free languages}
 \ccsdesc[500]{Theory of computation~Graph algorithms analysis}
 
-% \ccsdesc[100]{Theory of computation~Computational complexity and cryptography}
-% \ccsdesc[100]{Theory of computation~Design and analysis of algorithms}% Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
+\relatedversiondetails{Extended full version}{https://inria.hal.science/view/index/docid/5517329}
+
+\keywords{Recursive maze, pushdown automaton, reachability, context-free grammar, graph rewriting}
+
+\acknowledgements{We thank Ambroise Fleury for involuntarily suggesting this
+  work, and the anonymous reviewers for their constructive feedback as well as
+  for spotting many, many typos.}
 
 
-% I think some keywords should be reformulated,
-
-\keywords{Quantum computing, blockchains, IA, pushdown automaton, reachability, graph rewriting, addition chains, recursive maze, $(\lambda x. xx)(\lambda x. xx)$}
-
-%\supplement{Source code available at : \url{https://gitlab.lip6.fr/almasty/mq/}}
-
-% \funding{We acknowledge nfinancial support from the French Agence Nationale de la
-%   Recherche under projects ``PostCryptum'' (ANR20-ASTR-0011) and ``GORILLA''
-%   (ANR-20-CE39-0002).}
-
-\hideLIPIcs
+%\hideLIPIcs
 \nolinenumbers
 
 \begin{document}
@@ -120,16 +116,7 @@ the \href{https://archive.org/details/extropy-17/page/66/mode/2up}{internet
   archive}). Similar puzzles later appeared both in print and online. Recursive
 mazes are notoriously difficult to solve by hand, without taking notes and/or
 using an \textit{ad hoc} computer program to track one's position in the
-maze. Several such program exist, notably to play in a web browser, such as
-\begin{center}
-  \url{https://amurielagi.github.io/fractal-maze/}
-\end{center}
-or
-\begin{center}
-  \verb|\begin{shameless-advertisement}| \hspace{5cm}~\\
-    \hspace{2cm}\url{https://orelcosseron.github.io/fractal-maze/}\\
-  \verb|\end{shameless-advertisement}| \hspace{5cm}~
-\end{center}
+maze. Several such program exist, notably to play in a web browser\footnote{For instance \url{https://amurielagi.github.io/fractal-maze/} or [shameless advertisement] \url{https://orelcosseron.github.io/fractal-maze/}.}.
 
 \begin{figure}
   \includegraphics[width=0.59\textwidth]{FractalMaze95.png}
@@ -155,10 +142,8 @@ $\oplus$ in Fig.~\ref{fig:jpwolf}, from the starting point to the outside or to
 the finish line in Fig.~\ref{fig:later}. The trick is that, when following a
 wire, we may hit one of the inner boxes. In this case, we ``enter'' the box,
 which is a copy of the whole maze. Each entered box must be exited, by reaching
-one of its outer IO pin.
-
-This is where the real fun begins. For one, exiting may not be possible at
-all. Consider for instance the innocent-looking maze:
+one of its outer IO pin. This is where the real fun begins. For one, exiting may
+not be possible at all. Consider for instance the innocent-looking maze:
 \begin{center}
 \begin{tikzpicture}
   % special
@@ -188,406 +173,7 @@ all. Consider for instance the innocent-looking maze:
 From the starting point, one has to enter A (from the left). But from there, the
 only option is to follow the wire that leads to B, and enter on the left. From
 there, we are stuck in an infinite loop of entering B, and there is no way that
-we can exit the maze. In fact, the maze expands to:
-
-\begin{center}
-\begin{tikzpicture}[scale=3]
-  % special
-  \node at (0.66, 0.75) (start) {start};
-  \draw (start) -- (5/3, 0.75);
-
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw[ultra thick] (0, 1.5) +(-0.0333, 0) -- +(0.0333, 0);
-  \draw[ultra thick] (4, 1.5) +(-0.0333, 0) -- +(0.0333, 0);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 1
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 2
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-\end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}  
-  \end{scope}
-
-  % depth 2
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}  
-  \end{scope}
-  \end{scope}
-
-  % depth 1
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 2
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}  
-  \end{scope}
-
-  % depth 2
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[very thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}
-
-  % depth 3
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[thick] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-
-  % depth 4
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-  \draw[] (0, 0) rectangle +(4, 3);
-  \draw (0, 1.5) -- (0.5, 1.5) -- (0.5, 2.25) -- (5/3, 2.25);
-  \draw (3, 2.25) -| (3.5, 1.5);
-  \draw (3, 0.75) -| (3.5, 1.5);
-  \draw (3.5, 1.5) -- (4, 1.5);
-  % end of recursion
-  \begin{scope}[xshift=1.6667cm, yshift=0.25cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \begin{scope}[xshift=1.6667cm, yshift=1.75cm, scale=0.33333]
-    \draw[very thin] (0, 0) rectangle +(4, 3);
-  \end{scope}
-  \end{scope}
-  \end{scope}    
-  \end{scope}
-  \end{scope}  
-\end{tikzpicture}
-\end{center}
+we can exit the maze.
 
 It follows that simple graph-search techniques are not sufficient to decide if
 there is a way to exit the maze, because the graph that consists of all possible
@@ -625,7 +211,7 @@ exponential in the size of the maze.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.6\textwidth]{power4.pdf}
+  \includegraphics[width=0.5\textwidth]{power4.pdf}
   \caption{The ``power-of-two'' maze. \label{fig:power2}}
 \end{figure}
 
@@ -644,14 +230,11 @@ goals (getting out of the maze, or reaching $\oplus$ starting from $\ominus$),
 only getting out is interesting. More precisely, every maze where the goal is to
 reach a specific wire can be converted into another maze where the goal is to
 exit. Fig.~\ref{fig:convert} shows how. Interestingly, we do not know how to
-make the conversion the other way around. The obvious attempt (shown in
-Fig.~\ref{fig:convert-bad}) fails, because it creates extra connections between
-wires that may lead to spurious solutions. For instance, it allows to escape the
-unescapable ``innocent-looking'' maze shown above.
+make the conversion the other way around.
 
 \begin{figure}
   \centering
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=0.7]
   \begin{scope}
     \node at (1, 2) (minus) {\Large $\ominus$};
     \node at (1, 1) (plus) {\Large $\oplus$};
@@ -711,65 +294,6 @@ unescapable ``innocent-looking'' maze shown above.
   $\ominus$.}
 \end{figure}
 
-\begin{figure}
-  \centering
-\begin{tikzpicture}[scale=0.8]
-  \begin{scope}
-    \node at (2, 2) (start) {start};
-    \draw[dashed] (start) -- +(0, -1);
-    \draw[very thick] (0, 0) rectangle +(4, 3);
-    \foreach \i in {1, 2} {
-      \draw[ultra thick] (0, \i) +(-0.1, 0) -- +(0.1, 0);
-      \draw[ultra thick] (4, \i) +(-0.1, 0) -- +(0.1, 0);
-    }
-    \foreach \i in {1, 2, 3} {
-      \draw[ultra thick] (\i, 0) +(0, -0.1) -- +(0, 0.1);
-      \draw[ultra thick] (\i, 3) +(0, -0.1) -- +(0, 0.1);
-    }
-  \end{scope}
-
-  \draw[ultra thick,->] (4.5, 1.5) -- (6, 1.5);
-  \draw[ultra thick] (5, 1.75) -- (5.5, 1.25);
-  \draw[ultra thick] (5.5, 1.75) -- (5, 1.25);
-  
-  \begin{scope}[xshift=8cm]
-    \node[inner sep=0] at (2, 2) (start) {};
-    \draw[dashed] (start) -- +(0, -1);
-    \draw[very thick] (0, 0) rectangle +(4, 3);
-    \foreach \i in {1, 2} {
-      \draw[ultra thick] (0, \i) +(-0.1, 0) -- +(0.1, 0);
-      \draw[red] (4, \i) -- (4.5, \i);
-      \draw[ultra thick] (4, \i) +(-0.1, 0) -- +(0.1, 0);
-      \draw[red,ultra thick] (-1.5, 5*\i/3-1) +(-0.1, 0) -- +(0.1, 0);
-      \draw[red,ultra thick] (5.5, 5*\i/3-1) +(-0.1, 0) -- +(0.1, 0);
-    }
-    \draw[red,ultra thick] (-1.5, 5*2.5/3-1) +(-0.1, 0) -- +(0.1, 0);
-
-    \foreach \i in {1, 2, 3} {
-      \draw[red] (\i, 0) -- (\i, -0.5);
-      \draw[ultra thick] (\i, 0) +(0, -0.1) -- +(0, 0.1);
-      \draw[red] (\i, 3) -- (\i, 3.5);
-      \draw[ultra thick] (\i, 3) +(0, -0.1) -- +(0, 0.1);
-      \draw[red,ultra thick] (7*\i/4-1.5, -1) +(0, -0.1) -- +(0, 0.1);
-      \draw[red,ultra thick] (7*\i/4-1.5, 4) +(0, -0.1) -- +(0, 0.1);
-    }
-
-    \draw[red, very thick] (-1.5, -1) rectangle +(7, 5);
-    \node[red,inner sep=0] at (-1, 2.5) (minus) {\Large $\ominus$};
-    \node[red,inner sep=0] at (-1, 0.5) (plus) {\Large $\oplus$};
-    \draw[red,ultra thick] (0, 2.5) +(-0.1, 0) -- +(0.1, 0);
-    \draw[red] (minus) -- (0, 2.5);
-    \draw[red] (0, 2.5) -| (start);
-
-    \draw[red] (1, 3.5) -- (4.5, 3.5) -- (4.5, -0.5) -- (-1, -0.5) -- (plus);
-    \draw[red] (0, 2) -- (-1, 2) -- (plus);
-    \draw[red] (0, 1) -- (-1, 1);
-\end{scope}
-\end{tikzpicture}
-\caption{\label{fig:convert-bad} Trying to convert a ``getting out'' maze into a
-  ``reach internal target'' maze in the obvious way does not work (it creates
-  extra connections between wires).}
-\end{figure}
 
 
 In this article, we consider old and new algorithms to decide, in polynomial
@@ -790,7 +314,7 @@ maze on the left of Fig.~\ref{fig:simple}).
   \draw[very thick, Aquamarine] (2.5, 9) -- (2.5, 10);
 
   \draw[very thick, Orchid] (11, 1.75) -- (10, 1.75) node[below] {$\beta$} -- (10, 6.5) -- (9, 6.5);
-  \draw[very thick, LimeGreen] (8.5, 7) -- (8.5, 8) -- (6, 8) -- (6, 4) -- (6.5, 4) node[right] {$\zeta$} -- (6.5, 3);
+  \draw[very thick, LimeGreen] (8.5, 7) -- (8.5, 8) -- (6, 8) -- (6, 4) -- (6.5, 4) node[right] {$\epsilon$} -- (6.5, 3);
 
   \draw[very thick, red] (1.5, 2) -- (1.5, 3) -- (5, 3) -- (5, 9) -- (10, 9) -- (10, 7.25) -- (11, 7.25);
   \draw[very thick, red] (7.5, 9) -- (7.5, 10);
@@ -815,7 +339,7 @@ maze on the left of Fig.~\ref{fig:simple}).
   \node[extra box] at (0, 2) (R) {};
   \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
   
-  \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+  \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
   \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
   
   \node[extra box] at (2, 0) (B) {};
@@ -911,82 +435,8 @@ edge $\alpha \xrightarrow{X.i} \beta$ means that the outer IO pin $i$ belongs to
 wire $\beta$, and that $X.i$ belongs to wire $\alpha$. By convention, the
 starting point (\texttt{start}) belongs to wire $\alpha$.
 
-% non-minimality
-Nothing prevent several outer IO pins to belong to the same wire. In the simple
-maze of Fig.~\ref{fig:simple}, pins $(1, 2)$ and $(3, 5)$ are connected. But is
-this really necessary? When two outer IO pins belong to the same wire, couldn't
-we remove one of them (and redirect connections to the other one)? To answer
-this question, take the dual representation graph and \emph{erase} all pin
-information:
-
-\begin{center}
-\begin{tikzpicture}[scale=1]
-  \node[extra box] at (0, 2) (R) {};
-  \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
-  
-  \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
-  \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
-  
-  \node[extra box] at (2, 0) (B) {};
-  \node[extra box] at (2, 2) (K) {};
-  \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
-  \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
-  
-    \draw (start) edge[->] node[above] {$A.i$} (K);
-
-    \draw (K) edge[->] node[above] {$B.j$} (R);
-
-    \draw (B) edge[->, loop right] node[right] {$C.k$} ();
-    \draw (B) edge[->, bend left] node[right] {$A.\ell$} (R);
-    \draw (G) edge[->] node[below] {$D.m$} (B);
-
-    \draw (R) edge[->, loop left] node[left] {$D.n$} (R);
-    \draw (G) edge[->] node[left] {$B.o$} (R);
-    \draw (R) edge[->, bend left] node[right] {$C.p$} (B);
-  \end{tikzpicture}
-\end{center}
-
-Then formulate the constraints:
-\begin{itemize}
-\item Different wires are not ``inadvertently'' connected to the same outer IO
-  pin. This means that $\{i\}, \{j, n, o\}$, $\{p, m, k\}$ must be pairwise disjoint.
-\item Endpoints appear in a single wire. This means that inside the following sets, values are all different: $\{i, \ell\}, \{j, o\}, \{p, k\}$ and $\{n, m\}$.
-\end{itemize}
-The problem of assigning integer values in $\{1, \dots, N\}$, to the variables,
-for the smallest possible $N$, can be seen as a variant of the
-\textsc{Colorability} problem, but it is an easy one. A simple algorithm will
-satisfy the constraints using the minimum possible number of values: first
-compute a ``local'' assignment of values to the unknowns for each disjoint
-subset in isolation ; then form a global assignment by ``shifting'' values
-already used in previous subsets.  For instance, in the example above,
-satisfying the inequality constraints inside each disjoint subset leads to:
-\begin{align*}
-  i &\leadsto 1 \\
-  j, n, o &\leadsto (1, 1, 2) \\
-  p, m, k &\leadsto (1, 1, 2)
-\end{align*}
-Then assembling all disjoint subsets leads to:
-\[
-  (i), (j, n, o), (p,m,k) \leadsto (1), (2,2,3), (4,4,5)
-\]
-Therefore, the simple maze discussed above cannot be simplified further: at
-least 5 outer IO pins are necessary (and sufficient). Let the disjoint subsets
-be $A_1, \dots, A_k$, and the all-different ones be $B_1, \dots, B_\ell$ (note
-that the $B_j$'s are also disjoint, because they correspond to different boxes).
-Then inside a disjoint subset $A_i$, the variables in $A_i \cap B_j$ must be all
-different, for each $j$. Therefore, $\min_j |A_i \cap B_j|$ values are necessary
-(and sufficient) for $A_i$.
-
-Let us next look at the small maze on the right of Fig.~\ref{fig:jpwolf}. We
-number its pins from 0 to f clockwise (0,1,2,3 at the north, 4, 5, 6, 7 on the
-east side, 8,9,a,b at the south and c,d,e,f at on the west side). Pin 1 is
-clearly a decoy: nothing is connected to either $A.1$, $B.1$ or $C.1$. Next,
-pins 0, $e$ and $f$ belong to the same wire, but one of them is redundant. There
-are connections to $A.0, B.0, C.0, C.e, A.f$ and $B.f$, therefore ``merging''
-$e$ and $f$ is possible without creating extra connections. We assume that these
-extra pins are present for aesthetic reasons.
-
 \section{Recursive mazes as pushdown automata}
+\label{sec:pda}
 
 Navigating recursive mazes in one's head is difficult because it is necessary to
 keep track of all the boxes that have been entered (and by what pin).
@@ -1010,11 +460,11 @@ mirror is a no-op (the mirror cancels the effect of the first instruction).
 Lists of instructions can also be mirrored, by mirroring each instruction
 individually and reversing their order:
 $\overline{A.4; B.1; \overline{B.2}} = B.2; \overline{B.1};
-\overline{A.4}$. Applying a sequence of legal instruction then its mirror is a
+\overline{A.4}$. Applying a sequence of legal instructions then its mirror is a
 no-op.
 
-There is a way to efficiently check if a sequence of instruction is valid,
-i.e. if the desired moves are actually feasible. The validity of a move depend
+There is a way to efficiently check if a sequence of instructions is valid,
+i.e. if the desired moves are actually feasible. The validity of a move depends
 on the last box that was entered (for instance $\overline{A.2}$ is valid inside
 A but not inside B, C and D). So it is required to track the current box, as
 boxes are entered and exited. The analogy with the call stack of a recursive
@@ -1082,7 +532,7 @@ $\displaystyle
   \frac{\alpha}{\bot}
   \xrightarrow{A.4} \frac{\beta  }{ A \bot}
   \xrightarrow{B.1} \frac{\gamma }{ BA \bot}
-  \xrightarrow{\overline{B.2}}   \frac{\zeta  }{ A \bot}
+  \xrightarrow{\overline{B.2}}   \frac{\epsilon  }{ A \bot}
   \xrightarrow{D.3} \frac{\delta }{ DA \bot}
   \xrightarrow{C.5} \frac{\delta }{ CDA \bot}
   \xrightarrow{\overline{C.3}}   \frac{\gamma }{ DA \bot}
@@ -1099,325 +549,6 @@ such as \textsf{Moped}~\cite{DBLP:phd/dnb/Schwoon02} or
 \textsf{PDAAAL}~\cite{DBLP:conf/atva/JensenSSS22} (just to mention a few) that
 can therefore be used to solve recursive mazes.
 
-\section{Construction of mazes with an exit path of a prescribed length}
-
-The dual representation of recursive mazes can be useful as a design tool. For
-instance, we highlight the conception of mazes where the exit path has a
-prescribed length. This length must be odd (because each entered box must be
-exited, and there is \texttt{done} at the end).  For instance, suppose we would
-like to build a maze with a path of length 1337 (a random \texttt{leet}
-value). We start from a a \emph{twisted addition chain} for 1335:
-\begin{align*}
-  5 &= 1 + (1+1) + (1+1) \\
-  19 &= 1 + (5+1) + (5+1) + (5+1) \\
-  101 &= 1 + (19+1) + (19+1) + (19+1) + (19+1) + (19+1) \\
-  307 &= 1 + (101+1) + (101+1)+ (101+1) \\
-  1335 &= 1 + (101+1) + (307+1) + (307+1) + (307+1) + (307+1)
-\end{align*}
-And we build the following graph (pins were assigned using the algorithm outlined above):
-
-\begin{center}
-\begin{tikzpicture}[xscale=1.33]
-  \node[wire,fill=orange] at (0, 0) (alpha) {$\tau$};
-  \draw (alpha) edge[loop below] node[below] {$A.1$} ();
-  
-%  \node[extra box] at (1, -2) (upsilon) {};
-  \node[wire, draw] at (1, -2) (upsilon) {$\alpha$};
-  \draw (upsilon) edge[->] node[near start, above right=-1mm] {$F.2$} (alpha);
-
-  % chain for A/B 2
-  \node[wire,fill=Orchid,text=white] at (-2, 0) (beta) {$\beta$};
-  \node[wire,fill=red,text=white] at (-3, 0) (gamma) {$\gamma$};
-  \draw (beta) edge[->] node[above,very near start] {$A.2$} (alpha);
-  \draw (gamma) edge[->] node[above] {$A.3$} (beta);
-  \draw (gamma) edge[->, bend right] node[below, very near start] {$B.1$} (alpha);
-  
-  % chain for B/C 3
-  \node[wire,fill=Orchid,text=white] at (-2, 2) (delta) {$\delta$};
-  \node[wire,fill=red,text=white] at (-3, 2) (epsilon) {$\epsilon$};
-  \node[wire,fill=red,text=white] at (-4, 2) (zeta) {$\zeta$};
-  \draw (delta) edge[->] node[above right=-1mm,very near start] {$B.2$} (alpha);
-  \draw (epsilon) edge[->] node[above] {$B.4$} (delta);
-  \draw (zeta) edge[->] node[above] {$B.5$} (epsilon);
-  \draw (zeta) edge[->] node[below,near start] {$C.1$} (alpha);
-
-  % chain for C/D 5
-  \node[wire,fill=Orchid,text=white] at (0, 2) (eta) {$\eta$};
-  \node[wire,fill=red,text=white] at (1, 2) (theta) {$\theta$};
-  \node[wire,fill=red,text=white] at (2, 2) (iota) {$\iota$};
-  \node[wire,fill=red,text=white] at (3, 2) (kappa) {$\kappa$};
-  \node[wire,fill=red,text=white] at (4, 2) (lambda) {$\lambda$};
-  \draw (lambda) edge[->] node[above] {$C.9$} (kappa);
-  \draw (kappa) edge[->]  node[above] {$C.8$} (iota);
-  \draw (iota) edge[->]   node[above] {$C.7$} (theta);
-  \draw (theta) edge[->]  node[above] {$C.6$} (eta);
-  \draw (eta) edge[->]    node[left,very near start] {$C.2$} (alpha);
-  \draw (lambda) edge[->] node[below right=0mm, very near start] {$D.1$} (alpha);
-
-  % chain for D/E 3
-  \node[wire,fill=Orchid,text=white] at (-1, -2) (mu) {$\mu$};
-  \node[wire,fill=red,text=white] at (-2, -2) (nu) {$\nu$};
-  \node[wire,fill=red,text=white] at (-3, -2) (xi) {$\xi$};
-  \draw (xi) edge[->] node[below] {$D.11$} (nu);
-  \draw (nu) edge[->] node[below] {$D.10$} (mu);
-  \draw (mu) edge[->] node[right=0mm,near start] {$D.2$} (alpha);
-  \draw (xi) edge[->] node[above left=-1mm, very near start] {$E.1$} (alpha);
-
-  % chain for D/E/F 4
-  \node[wire,fill=Orchid,text=white] at (2, 0) (omicron) {$o$};
-  \node[wire,fill=red,text=white] at (3, 0) (pi) {$\pi$};
-  \node[wire,fill=red,text=white] at (4, 0) (rho) {$\rho$};
-  \node[wire,fill=red,text=white] at (5, 0) (sigma) {$\sigma$};
-  \node[wire,fill=red,text=white] at (6, 0) (tau) {$\tau$};
-
-  \draw (omicron) edge[->] node[above,very near start] {$E.2$} (alpha);
-  \draw (pi) edge[->] node[above] {$E.12$} (omicron);
-  \draw (rho) edge[->] node[above] {$E.13$} (pi);
-  \draw (sigma) edge[->] node[above] {$E.14$} (rho);
-  \draw (tau) edge[->] node[above] {$D.15$} (sigma);
-  \draw (tau) edge[->, bend left] node[below=0mm, near start] {$F.1$} (alpha);
-\end{tikzpicture}
-\end{center}
-
-The resulting maze has 15 pins, 6 recursive boxes and 20 wires. An exit path is provided by:
-\begin{align*}
-  \mathcal{P}_5    &:= \overline{B.1}; A.3; A.2; \overline{A.1}; \overline{A.1}  \\   % pop B
-  \mathcal{P}_{19}  &:= \overline{C.1}; B.5; B.4;  B.2; \left(\mathcal{P}_5\right)^3 \\  % pop C
-  \mathcal{P}_{101} &:= \overline{D.1}; C.9; C.8; C.7; C.6; C.2; \left(\mathcal{P}_{19}\right)^5  \\ %pop D
-  \mathcal{P}_{307} &:= \overline{E.1}; D.11; D.10; D.2; \left(\mathcal{P}_{101}\right)^3  \\ % pop E
-  \mathcal{P}_{1335}&:= \overline{F.1 }; D.15; E.14; E.13; E.12; E.2; \left(\mathcal{P}_{307}\right)^4; \left(\mathcal{P}_{101}\right) \\ % pop F
-  \mathcal{P}_{1337}&:= F.2; \left(\mathcal{P}_{1335}\right); \texttt{done}
-\end{align*}
-The point is that the sequence of instruction $\mathcal{P}_5$ takes the player
-from wire $\tau$ to wire $\tau$ but exits box $B$. $\mathcal{P}_{19}$ does the
-same with box $C$, $\mathcal{P}_{101}$ with box $D$, etc.  It is left to the
-reader to check that $\mathcal{P}_x$ has length $x$. We also hope that, at this
-point, the role of the ``twisted addition chains'' has become clear. A Twisted
-addition chain is a sequence of equalities of the kind
-$a_{i+1} = [\text{sum of $k$ previous $a_i$'s}] + (k+1)$, starting with
-$a_0 = 1$. The number of recursive boxes is one plus the number of steps of the twisted
-addition chain. The number of wires is two plus the total number of occurrences
-of all constants in right-hand sides of the twisted addition chain, and pins =
-wires + 1 - boxes.
-
-The alternative twisted addition chain:
-\begin{align*}
-  3 &= 1 + (1+1) \\
-  9 &= 1 + (3+1) + (3+1) \\
-  21 &= 1 + (9+1) + (9+1) \\
-  45 &= 1 + (21+1) + (21+1) \\
-  93 &= 1 + (45+1) + (45+1) \\
-  189 &= 1 + (93+1) + (93+1) \\
-  571 &= 1 + (189+1) + (189+1) + (189+1) \\
-  1335 &= 1 + (189+1) + (571+1) + (571+1)
-\end{align*}
-leads to a different maze with 9 recursive boxes, 11 pins and only 19
-wires.
-
-Using this strategy with a sequence of ``doubling plus three'' steps only yields
-a variant of the ``power-of-two'' maze shown in Fig.~\ref{fig:power2}. Using a twisted
-addition chain with $k$ steps of the kind $a_{i+1} = 2a_i + 3$ yields a maze
-with $1+k$ boxes, $2+2k$ wires and $2+k$ IO pins. The exit path has length
-$3 \cdot 2^k - 3$. This shows that the length of the exit path can be
-exponential in any of the relevant quantities. 
-
-As a side note, there is a rich theory of normal addition chains
-(see~\cite{Knuth}), and we believe that the twisted ones beg for the same level
-of attention.
-
-\section{Languages associated to recursive mazes}
-
-A context-free language can be associated to each recursive maze, but what about
-the converse? Is there a recursive maze that can be exited by any syntactically
-correct Python program? In this section we take a first step toward
-characterizing the class of context-free languages corresponding to recursive
-mazes.
-
-Let $\mathcal{L}$ be the (context-free) language accepted by a recursive
-maze. We first introduce an \emph{erasure homomorphism} $h$ such that
-$h(X.i) = X$, $h(\overline{X.i}) = \overline{X}$ and
-$h(\texttt{done}) = \epsilon$ (the empty string).
-
-The $k$-\emph{Dyck} language contains all words that are well-parenthesized
-using $k$ types of parentheses. For instance, \verb|([[]{}](){()})[]| $\in$
-3-Dyck. In a recursive maze, each recursive box that is entered must be
-exited. In a valid sequence of instruction there is a therefore properly nested
-matching between ``\emph{calls}'' (entering a box) and ``\emph{returns}''
-(exiting a box).  In other term, if the maze has $B$ recursive boxes
-$\mathcal{B} = \{X_1, \dots, X_B\}$, then $h(\mathcal{L})$ is a contained in the
-Dyck language with $B$ pairs of delimiters
-$(X_1, \overline{X_1}), \dots, (X_B, \overline{X_B})$. For instance, the erasure
-homomorphism sends the solution of the simple maze of Fig.~\ref{fig:simple}:
-\[
-  h(A.4; B.1; \overline{B.2}; D.3; C.5; \overline{C.3}; \overline{D.1}; \overline{A.2}; \texttt{done}) = ( [] \{ \langle \rangle \} )
-\]
-
-
-Another way of formulating the same observation is that $\mathcal{L}$ is a
-\emph{regular nested words language}~\cite{10.1145/1516512.1516518}. The
-pushdown automaton that accepts $\mathcal{L}$ is indeed a \emph{visibly pushdown
-  automaton} (it always pushes or pops when presented with a given input symbol,
-regardless of its internal state). A moment's thought reveals that $\mathcal{L}$
-is in fact a (rooted) regular nested words language without internal symbol (the
-construction in a sentence: entering a box is a ``call'' with a nesting edge
-labelled by the box to the exit/return instruction). This already implies that
-the \textsf{OpenNWA} library~\cite{10.1007/978-3-642-31424-7_47} can be used to
-find a (shortest) exit path in a recursive maze.
-
-Any Dyck language can be accepted by a recursive maze, as illustrated below for 3-Dyck:
-\begin{center}
-\begin{tikzpicture}[scale=0.5]
-  \draw[very thick] (0, 0) rectangle +(16, 5);
-%  \draw (-0.1, 1.5) -- (2, 1.5) node[right] {\tt (};
-%  \draw (4, 1.5) node[left] {\tt )} -- (6.1, 1.5);
-
-  \draw[thick] (1, 2) rectangle node {A} +(4, 2);
-  \draw[thick] (6, 2) rectangle node {B} +(4, 2);
-  \draw[thick] (11, 2) rectangle node {C} +(4, 2);
-  \node[inner sep=1pt] at (1.5, 1) (start) {start};
-  \draw (start) -- (13, 1);
-  \draw (3, 2) -- (3, 1);
-  \draw (8, 2) -- (8, 0);
-  \draw (13, 2) -- (13, 1);
-  \draw[ultra thick] (8, -0.2) -- +(0, 0.4) node[below=2mm] {1};
-\end{tikzpicture}
-\end{center}
-
-
-So, $h(\mathcal{L})$ is a subset of a Dyck language, but not any subset: it is
-contained in a \emph{regular} language derived from the maze. Imagine that the
-dual representation graph is a finite automaton, in which the states
-corresponding to wires connected to an outer IO pin are accepting. Then for each
-edge add a ``mirror'' edge with the mirror instruction and keep only the box
-label, erasing the pin label on instructions. For instance, with the simple
-recursive maze of Fig.~\ref{fig:simple}:
-\begin{center}
-\begin{tikzpicture}[scale=1.25]
-  \node[extra box] at (0, 2) (R) {};
-  \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
-  \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
-  
-  \node[extra box] at (2, 0) (B) {};
-  \node[wire,fill=Aquamarine,text=white] at (2, 0) {$\delta$};
-
-  \node[extra box] at (2, 2) (K) {};
-  \node[wire,fill=Orchid,text=white] at (2, 2) {$\beta$};
-
-  \node[wire, fill=orange] at (4, 2) (start) {$\alpha$};
-  \draw (4.5, 2) edge[->] (start);
-
-  
-  \draw[<-] ($(start.west)!-0.5mm!90:(K.east)$) -- node[above, near end] {$\overline{A}$} ($(K.east)!0.5mm!90:(start.west)$);
-  \draw[->] ($(start.west)!0.5mm!90:(K.east)$) -- node[below, near start] {$A$} ($(K.east)!-0.5mm!90:(start.west)$);
-
-  %\draw (K) edge[->] node[above] {$B.1$} (R);
-  \draw[<-] ($(K.west)!-0.5mm!90:(R.east)$) -- node[above, near end] {$\overline{B}$} ($(R.east)!0.5mm!90:(K.west)$);
-  \draw[->] ($(K.west)!0.5mm!90:(R.east)$) -- node[below, near start] {$B$} ($(R.east)!-0.5mm!90:(K.west)$);
-
-  
-  \draw (B) edge[->, loop right] node[right] {$C$} ();
-  \draw (B) edge[->, loop below] node[below] {$\overline{C}$} ();
-  
-%  \draw (B) edge[->, bend left] node[right] {$A.2$} (R);
-%  \draw (R) edge[->, bend left] node[right] {$C.3$} (B);
-  \draw[->] ($(B.north west)!-0.5mm!90:(R.south east)$) -- node[above=-0.5mm, sloped] {$A, \overline{C}$} ($(R.south east)!0.5mm!90:(B.north west)$);
-  \draw[<-] ($(B.north west)!0.5mm!90:(R.south east)$) -- node[below=-0.5mm, sloped] {$\overline{A}, C$} ($(R.south east)!-0.5mm!90:(B.north west)$);
-
-  
-  % \draw (G) edge[->] node[below] {$D.3$} (B);
-  \draw[->] ($(B.west)!-0.5mm!90:(G.east)$) -- node[above, near end] {$\overline{D}$} ($(G.east)!0.5mm!90:(B.west)$);
-  \draw[<-] ($(B.west)!0.5mm!90:(G.east)$) -- node[below, near start] {$D$} ($(G.east)!-0.5mm!90:(B.west)$);
-  
-  \draw (R) edge[->, loop above] node[above] {$D.1$} ();
-  \draw (R) edge[->, loop left] node[left] {$\overline{D.1}$} ();
-
-%  \draw (G) edge[->] node[left] {$B.2$} (R);
-  \draw[<-] ($(G.north)!0.5mm!90:(R.south)$) -- node[left=-0.5mm, near end] {$\overline{B}$} ($(R.south)!-0.5mm!90:(G.north)$);
-  \draw[->] ($(G.north)!-0.5mm!90:(R.south)$) -- node[right=-1mm, near start] {$B$} ($(R.south)!0.5mm!90:(G.north)$);
-\end{tikzpicture}
-\end{center}
-
-This non-deterministic finite automaton ``statically'' describes possible moves
-in the recursive maze, ignoring the stack and the history of the computation. In
-this example, it expresses that from wire $\beta$ it is possible to enter box
-$B$ to reach wire $\gamma$, and that you cannot enter box $C$ from wire $\zeta$.
-
-Denote by $R$ the regular language it accepts. Any valid sequence of instruction
-that exits the maze belong to $R$ (but the converse is not true). In the end, we
-find that $h(\mathcal{L}) \subseteq D \cap R$, where $D$ is the Dyck language
-with $B$ delimiters and $R$ is the regular language defined above. A moment's
-thought will reveal that this inclusion is in fact an equality, and yield:
-
-\medskip
-\begin{theorem}[informal]
-  Let $\mathcal{L}$ be the language of all sequences of instructions that exit a
-  recursive maze. Then $h(\mathcal{L})$ is precisely the intersection of the
-  $B$-Dyck language with $R$, the regular language derived from the
-  ``undirected'' version of the dual representation graph of the maze.
-\end{theorem}
-
-By the Chomsky-Schützenberger representation theorem~\cite{CHOMSKY1959118},
-\emph{any} context-free language can be obtained by applying a homomorphism to
-the intersection of a Dyck language and a regular language. This opens up the
-possibility that applying a homomorphism to $\mathcal{L}$ may yield a large
-class of context-free languages.
-
-However, there is a severe restriction. The regular language in the intersection
-must be such that the graph describing the associated finite automaton is
-``undirected'' (see~\cite{DBLP:journals/acta/KutribMS22} for more results on
-this kind of automata---they are said to be ``dual and connected''
-in~\cite{STEINBERG2002341}). This highlight a nasty ``feature'' of recursive
-mazes: all moves are reversible. Mistakes can be undone without having to hit
-CTRL+Z, just by entering an appropriate instruction (exit the box that has just
-been entered, or re-enter the box that has just been left).
-
-In a valid sequence of instructions, it is possible to insert anywhere an
-arbitrarily long sequence of arbitrary (legal) moves, and then ``undo'' them to
-return to the same position while leaving the stack unchanged. This shows that
-even very simple \emph{regular} languages (recognized by a deterministic finite
-automaton) such as $a^* b^*$ cannot be obtained by applying a homomorphism to
-$\mathcal{L}$. Indeed, suppose it could: the homomorphism sends some
-instructions to $a$ and some others to $b$. Start from a valid sequence of
-instruction that emits a word in the language (say $aaaabb$). Then ``undo'' it
-and replay it. This yields another valid sequence of instructions that emits
-``$aaaabb\,[$some stuff$]\,aaaabb$'', and this does not belong to $a^* b^*$.
-
-\emph{Irreversible progress} is banned from maze-associated languages. 
-
-We see a striking analogy with abstract quantum computational models: applying a
-unitary transformation to the state of a quantum system is reversible,
-\emph{just like moves in a recursive maze}. This sheds new light to the
-intervention of Peter Shor in the field of recursive mazes (we are not so naive
-as to believe that it is a mere coincidence). Therefore, we plan to push forward
-the idea that recursive mazes are ideally suited as a computational model for
-future quantum computers (although we are going to leave that aspect aside for
-future work).
-
-Characterizing the class of context-free languages that can be obtained by
-applying a homomorphism to the language associated to a regular maze remains an
-open problem.
-
-% A first obstacle is that the input alphabet of the automaton defined above is
-% fixed. This difficulty can be sidestepped by applying a \emph{homomorphism} to
-% the language accepted by the automaton: the homomorphism replaces each symbol by
-% a (possibly empty) sequence of symbols from another alphabet. We say that a
-% language $L$ is ``\emph{associated to a recursive maze}'' when there is a
-% homomorphism $h$ and a recursive maze such that applying the homomorphism to the
-% language accepted by the deterministic pushdown automaton built from the maze
-% yields $L$. Applying a fixed homomorphism usually does not add extra power:
-% applying a homomorphism to a regular (resp. context-free) language still yields
-% a regular (resp. context-free) language.
-
-
-% ........
-
-% This strongly suggests that there could be a relation between maze-associated
-% languages and 
-
-% It is then natural to ask: could any rooted regular nested word language be
-% maze-associated? The answer to this question is negative. 
-
-
 
 \section{Off-the-shelf algorithms to exit recursive mazes}
 \label{sec:shelf}
@@ -1431,15 +562,14 @@ Peter Shor). We now describe the classic algorithm that does this.
 
 The non-terminal symbols are $L$ (the language itself) and $[\alpha X \beta]$
 for $\alpha, \beta \in \mathcal{W}$ and $X \in \mathcal{B}$. Intuitively,
-$[\alpha X \beta]$ is the set of sequence of instructions that move from wire
+$[\alpha X \beta]$ is the set of sequences of instructions that move from wire
 $\alpha$ to wire $\beta$ while exiting the box $X$. The derivation rules are as
 follows. For the whole language, we need to exit the maze, so we need to reach
 the outside of the starting box (popping $\bot$), from the starting wire $\alpha$.
 \begin{itemize}
 \item L ::= $[\alpha \bot \omega]$ \hfill (for all wire $\omega \in \mathcal{W}$)  
 \end{itemize}
-
-Then for each edge $\phi \xrightarrow{X.i} \psi$ in the dual representation of
+\noindent Then for each edge $\phi \xrightarrow{X.i} \psi$ in the dual representation of
 the maze:
 \begin{itemize}
 \item $[\psi X \phi]$ ::= $\overline{X.i}$
@@ -1452,83 +582,17 @@ operates by iteratively marking variables that produce a string of terminal
 symbols and/or marked variables. It can be implemented to run in constant time
 per derivation rule. This decides if a recursive maze can be exited in time $\bigO{W^2EB}$.
 
-\begin{figure}
-\begin{center}
-\begin{tikzpicture}[scale=0.5]
-  \draw[very thick] (0, 0) rectangle +(16, 9);
-%  \draw (-0.1, 1.5) -- (2, 1.5) node[right] {\tt (};
-%  \draw (4, 1.5) node[left] {\tt )} -- (6.1, 1.5);
-
-  \draw[thick] (1, 2) rectangle node {A} +(4, 2);
-  \draw[thick] (6, 2) rectangle node {B} +(4, 2);
-  \draw[thick] (11, 2) rectangle node {C} +(4, 2);
-  \draw[thick] (6, 6) rectangle node {D} +(4, 2);
-
-  \node[draw,circle,inner sep=1pt] at (3, 5) (minus) {$-$};
-  \node[draw,circle,inner sep=1pt] at (13, 5) (plus) {$+$};
-
-  \node at (11.5, 5.5) {$\delta$};
-  
-  % connexion minus / plus et veers D.
-  \draw (minus) -- (7, 5) circle[fill=black,radius=1pt] -- (8, 5) circle[fill=black,radius=1pt] -- (9, 5) circle[fill=black,radius=1pt] -- (plus);
-  \draw (7, 5) -- (7, 6);
-  \draw (8, 5) -- (8, 6);
-  \draw (9, 5) -- (9, 6);
-
-  \begin{scope}
-    \draw[ultra thick] (3, -0.2) -- +(0, 0.4) node[below=2mm] {1};
-    \draw (3, 0) -- (3, 1);
-    \draw (2, 1) -- (4, 1) node[right] {$\alpha$};
-    \draw (2, 1) -- (2, 2);
-    \draw (3, 1) -- (3, 2);
-    \draw (4, 1) -- (4, 2);
-  \end{scope}
-  \begin{scope}[xshift=5cm]
-    \draw[ultra thick] (3, -0.2) -- +(0, 0.4) node[below=2mm] {2};
-    \draw (3, 0) -- (3, 1);
-    \draw (2, 1) -- (4, 1) node[right] {$\beta$};
-    \draw (2, 1) -- (2, 2);
-    \draw (3, 1) -- (3, 2);
-    \draw (4, 1) -- (4, 2);
-  \end{scope}
-  \begin{scope}[xshift=10cm]
-    \draw[ultra thick] (3, -0.2) -- +(0, 0.4) node[below=2mm] {3};
-    \draw (3, 0) -- (3, 1);
-    \draw (2, 1) -- (4, 1) node[right] {$\gamma$};
-    \draw (2, 1) -- (2, 2);
-    \draw (3, 1) -- (3, 2);
-    \draw (4, 1) -- (4, 2);
-  \end{scope}  
-\end{tikzpicture}
-\end{center}
-\caption{\label{fig:quadraticE} \sout{botched attempt at 3-Dyck} Maze showing that the number of edges in the dual representation graph can be quadratic in the number of wires.}
-\end{figure}
-
-However, the dual representation of the maze can have $E = \bigOmega{W^2}$
-edges. This is for instance the case of the maze show in
-Fig.~\ref{fig:quadraticE}: there are $k+1$ wires, and except the special one
-that it connected to $\oplus$ and $\ominus$, they are all reachable from one
-another. So the dual representation graph has $k(k+1)$ edges.
-
-It follows that the generic technique may require $\bigOmega{B W^4}$
-operations. However, the context-free grammar, once constructed, reveals much
-information about the language. In particular, it is fairly easy to find the
-shortest path that exits the maze (associate to each non-terminal the shortest
-word that can be obtained from it, and take the minimum over each possible
-derivation rule).
-
 \section{Getting out of recursive mazes faster with inter-dimensional wormholes}
 \label{sec:modelchecking}
 
 
-There is a more efficient technique that can be better suited to laaaaaarge
-recursive mazes. It is heavily inspired by algorithms designed almost
-simultaneously by Bouajjani, Esparza and
+There is a more efficient technique that can be better suited to
+laaaaaaaaaaaarge recursive mazes. It is heavily inspired by algorithms designed
+almost simultaneously by Bouajjani, Esparza and
 Maler~\cite{DBLP:conf/concur/BouajjaniEM97} on the one hand and Finkel, Willems
 and Wolper~\cite{DBLP:journals/entcs/FinkelWW97} on the other hand. These
-algorithms were created to decide reachability properties in pushdown systems,
-in the context of model checking problems that could admit such a
-representation.
+algorithms decide reachability properties in pushdown systems, in the context of
+model checking problems that could admit such a representation.
 
 The main idea behind this algorithm is simple. If there are two edges
 $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$ in the dual
@@ -1576,7 +640,7 @@ syntactic sugar for $(\alpha, \beta) \in \Gamma_i$ (resp. $\Gamma_\infty$).
   of the increasing function on pairs of wires that guarantees the wanted properties).
 \end{proof}
 
-The idea is that there is a sequence of instruction that takes the player from
+The idea is that there is a sequence of instructions that takes the player from
 $\alpha$ to $\delta$ while leaving the stack unchanged whenever
 $\alpha \stackrel{*}{\equiv} \delta$. We then say that there is a
 \emph{transitive wormhole} between $\alpha$ and $\delta$.
@@ -1592,7 +656,7 @@ dual representation graph with these wormholes, using dashed edges:
 \begin{center}
   \begin{tikzpicture}[scale=1.25]
     \node[wire,fill=orange] at (4, 2) (start) {$\alpha$};
-    \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[wire,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     
     \node[wire,fill=red,text=white] at (0, 2) {$\gamma$};
     \node[draw,minimum size=6mm] at (0, 2) (R) {};
@@ -1617,14 +681,14 @@ dual representation graph with these wormholes, using dashed edges:
     \draw (R) edge[<->, red, ultra thick, dashed] (B);
     \draw[<->, red, ultra thick, dashed] (R) .. controls (-1, 1.5) and (-1, 0.5) .. (G);
 
-    \node[anchor=west] at (5, 1.75) {$\beta \xrightarrow{B.1} \gamma \xleftarrow{B.2} \zeta$};
+    \node[anchor=west] at (5, 1.75) {$\beta \xrightarrow{B.1} \gamma \xleftarrow{B.2} \epsilon$};
     \node[anchor=west] at (5, 1) {$\gamma \xrightarrow{C.3} \delta \xleftarrow{C.5} \delta$};
-    \node[anchor=west] at (5, 0.25) {$\gamma \xrightarrow{D.1} \gamma \equiv \delta \xleftarrow{D.3} \zeta$};
+    \node[anchor=west] at (5, 0.25) {$\gamma \xrightarrow{D.1} \gamma \equiv \delta \xleftarrow{D.3} \epsilon$};
   \end{tikzpicture}
 \end{center}
 
-Note that the wormhole between $\gamma$ and $\zeta$ is transitive
-($\gamma \not\equiv \zeta$ but $\gamma \stackrel{*}{\equiv} \zeta$). From this,
+Note that the wormhole between $\gamma$ and $\epsilon$ is transitive
+($\gamma \not\equiv \epsilon$ but $\gamma \stackrel{*}{\equiv} \epsilon$). From this,
 we observe that
 $\alpha \xrightarrow{A.4} \beta \stackrel{*}{\equiv} \gamma \xleftarrow{A.2}
 \delta$, so that $\alpha \stackrel{*}{\equiv} \delta$ and the maze can be
@@ -1644,15 +708,11 @@ graph (at most $W^2$ of them). Each edge can be labelled with a unique
 identifier. Local wormhole edges can additionally be labelled with a sequence of
 \emph{two} instructions. Transitive wormhole edges can be labelled with a tuple
 of (instruction, wormhole identifier, instruction). All wormhole edges can be
-labelled with a length. Therefore, not only it is possible to find a the
-shortest path from the starting point to an exit (using only wormhole edges),
-but it is possible to emit a description of this path in polynomial time, even
-though the path may have exponential length, by printing the labels of the
-crossed wormhole edges.
-
-In passing, \cite{DBLP:conf/concur/BouajjaniEM97,DBLP:journals/entcs/FinkelWW97}
-show that the set of stacks that the player can have when sitting on a given
-wire is a regular language (accepted by a deterministic finite automaton).
+labelled with a length. Therefore, not only it is possible to find a shortest
+path from the starting point to an exit (using only wormhole edges), but it is
+possible to emit a description of this path in polynomial time, even though the
+path may have exponential length, by printing the labels of the crossed wormhole
+edges.
 
 \section{Getting out of recursive mazes even faster by collapsing wormholes}
 \label{sec:us}
@@ -1674,8 +734,17 @@ from a state $q$ to another state $q'$ that leaves the stack unchanged, while
 there might not be a sequence of transitions from $q'$ to $q$ that leaves the
 stack unchanged. In recursive mazes, we now that the latter exists.
 
-This makes it possible for us, instead of explicitly building a clique between
-equivalent wires as
+On this occasion, we cannot resist the urge of a little digression.  We see a
+striking analogy with abstract quantum computational models: applying a unitary
+transformation to the state of a quantum system is reversible, \emph{just like
+  moves in a recursive maze}. This sheds new light to the intervention of Peter
+Shor mentioned in section~\ref{sec:pda}---we are not so naive as to believe that
+it is a mere coincidence. Therefore, we plan to push forward the idea that
+recursive mazes are ideally suited as a computational model for future quantum
+computers (although we are going to leave that aspect aside for future work).
+
+Back to the problem at hand, this makes it possible for us, instead of
+explicitly building a clique between equivalent wires as
 in~\cite{DBLP:conf/concur/BouajjaniEM97,DBLP:journals/entcs/FinkelWW97}, to
 build a (much smaller) \emph{spanning tree}: this preserves reachability
 properties. The same technique is used in the context of sparse matrix
@@ -1704,10 +773,21 @@ have the same extremities and the same box attribute, so we remove one of
 them. See Fig.~\ref{fig:merge} for an illustration. The underlying idea is that
 all wires inside of a supernode are known to be in relation by
 $\stackrel{*}{\equiv}$. Our algorithm consists in iterating this graph rewriting
-process as long as possible\footnote{After a draft of this paper was written, we
-  discovered that the same operation has been called ``folding''
-  in~\cite{Stallings1983,b97de931-5994-30c4-b01e-c43e12a3f8e6,STEINBERG2002341},
-  in quite a different context---profinite topologies on a free group}.
+process as long as possible.
+
+After a draft of this paper was written, we discovered that the same operation
+has been called ``folding''
+in~\cite{Stallings1983,b97de931-5994-30c4-b01e-c43e12a3f8e6,STEINBERG2002341},
+in quite a different context---profinite topologies on a free group, if you can
+believe it. The main properties of this process have already been proved in
+these works, and because of space constraints we will not repeat them: wormholes
+can be contracted in any order, and at the end we get exactly the equivalence
+classes of $\stackrel{*}{\equiv}$. The intuition behind this is that contracting
+a wormhole may create new wormholes but not destroy preexisting ones (other than
+the one being contracted, of course). This is because a wormhole requires two
+similarly-labelled edges pointing to the same node ; contracting a wormhole can
+only bring together the endpoints of edges previously pointing to different
+nodes, not take them apart.
 
 
 \tikzset{every edge/.style={draw,shorten >=0.5mm}}
@@ -1720,7 +800,7 @@ process as long as possible\footnote{After a draft of this paper was written, we
   \node[draw] at (2, 0) (c) {$\gamma$};
   \node[draw] at (1, 3) (b) {$\beta$};
   \node[draw] at (-1.5, 1.5) (d) {$\delta$};
-  \node[draw] at (3.5, 1.5) (e) {$\zeta$};
+  \node[draw] at (3.5, 1.5) (e) {$\epsilon$};
   \node[draw] at (0, -2) (f) {$\phi$};
   \node[draw] at (2, -2) (g) {$\psi$};
 
@@ -1745,7 +825,7 @@ process as long as possible\footnote{After a draft of this paper was written, we
   \node[draw] at (1, 0) (ac) {$\alpha \cup \gamma$};
   \node[draw] at (1, 3) (b) {$\beta$};
   \node[draw] at (-1.5, 1.5) (d) {$\delta$};
-  \node[draw] at (3.5, 1.5) (e) {$\zeta$};
+  \node[draw] at (3.5, 1.5) (e) {$\epsilon$};
   \node[draw] at (0, -2) (f) {$\phi$};
   \node[draw] at (2, -2) (g) {$\psi$};
 
@@ -1765,175 +845,12 @@ process as long as possible\footnote{After a draft of this paper was written, we
 \caption{\label{fig:merge} Illustration of the graph contraction process. Edge labels in lower-case letters are arbitrary.}
 \end{figure}
 
-%\subsection{Correctness}
-
-We now establish the main property of the process: wormholes can be contracted
-in any order, and at the end we get exactly the equivalence classes of
-$\stackrel{*}{\equiv}$.
-
-The intuition behind this is that contracting a wormhole may create new
-wormholes but not destroy preexisting ones (other than the one being contracted,
-of course). This is because a wormhole requires two similarly-labelled edges
-pointing to the same node ; contracting a wormhole can only bring together the
-endpoints of edges previously pointing to different nodes, not take them apart.
-
-We formally establish the results using tools borrowed from the field of
-\sout{artificial intelligence} automated reasoning (and more precisely,
-rewriting techniques for equational theories,
-see~\cite{DBLP:books/el/RV01/DershowitzP01} for more details).  Let $\leadsto$
-be the binary relation on directed graphs that corresponds to the wormhole
-contraction process described above. It operates on graphs where edges are
-labelled by a (box, pin) pair, and where nodes are labelled with a set of
-wires. We have $G \leadsto G'$ if $G'$ can be obtained from $G$ by contracting a
-wormhole. In this case, $G'$ has one less vertex and one less edge than $G$. It
-follows that any \emph{derivation} $G_0 \leadsto G_1 \leadsto \dots$ is
-finite. Let $\stackrel{*}{\leadsto}$ denote the reflexive-transitive closure of
-$\leadsto$. A graph $G$ is \emph{reducible} if there is a $G'$ such that
-$G \leadsto G'$, and \emph{irreducible} otherwise. When
-$G \stackrel{*}{\leadsto} G'$ and $G'$ is irreducible, then $G'$ is a
-\emph{normal form} of $G$. In our case, normal forms are \emph{unique}: if $G_0$
-and $G_1$ are normal forms of $G$, then $G_0 = G_1$.  The main ingredient to
-establish this is the following:
-
-\medskip
-
-\begin{lemma}
-  The $\leadsto$ relation is \emph{confluent}: if $G \stackrel{*}{\leadsto} G_0$ and
-  $G \stackrel{*}{\leadsto} G_1$, then there is a $G'$ such that
-  $G_0 \stackrel{*}{\leadsto} G'$ and $G_1 \stackrel{*}{\leadsto} G'$.
-\end{lemma}
-
-\begin{proof}
-  This follows from \emph{strong confluence} and termination of $\leadsto$ by
-  Newman's lemma (essentially, an induction on the number of steps of the
-  derivations).
-
-  Therefore the problem is to prove strong confluence: if $G \leadsto G_0$ and
-  $G \leadsto G_1$, then either $G_0 = G_1$ or there is a $G'$ such that
-  $G_0 \leadsto G'$ and $G_1 \leadsto G'$. Suppose $G_0 \neq G_1$, so that there
-  are two ``contractible'' wormholes in $G$:
-  $\alpha \xrightarrow{X} \beta \xleftarrow{X} \gamma$ (leading to $G_0$) and
-  $\phi \xrightarrow{Y} \chi \xleftarrow{Y} \psi$ (leading to $G_1$), with
-  $\{ \alpha, \gamma \} \neq \{\phi, \psi\}$.
-
-  If $\{ \alpha, \gamma \} \cap \{\phi, \psi\} = \emptyset$, then after
-  contracting $\alpha \xrightarrow{X} \beta \xleftarrow \gamma$ (yielding
-  $G_0$), there still exist two vertices labelled $\phi$ and $\psi$ in $G_0$,
-  along with the two outgoing edges labelled $Y$ pointing to the same node
-  $\chi'$ (even though $\chi'$ may not be labelled $\chi$ as in $G$ as a result
-  of the contraction; in any case it is labelled with a superset of
-  $\chi$). Contracting $\phi \xrightarrow{Y} \chi' \xleftarrow{Y} \psi$ is still
-  possible in $G_0$ and yields $G'$, where $\alpha, \gamma, \phi$ and $\psi$
-  have been replaced by $\alpha \cup \gamma$ and $\psi \cup \phi$. The exact
-  same reasoning can be carried out starting from $G_1$ (contracting the other
-  wormhole), with the same conclusion.
-
-  if $\{ \alpha, \gamma \} \cap \{\phi, \psi\} \neq \emptyset$, then without
-  loss of generality we may assume that $\phi = \gamma$. There are thus two
-  wormholes
-  $\alpha \xrightarrow{X} \beta \xleftarrow{X} \gamma \xrightarrow{Y} \chi
-  \xleftarrow{Y} \psi$. In that case, after contracting
-  $\alpha \xrightarrow{X} \beta \xleftarrow \gamma$, we see that the second
-  wormhole has been modified: $\gamma \xrightarrow{Y} \chi \xleftarrow{Y} \psi$
-  in $G$ has been replaced by
-  $(\alpha \cup \gamma) \xrightarrow{Y} \chi' \xleftarrow{Y} \psi$ in $G_0$. But
-  then, contracting the modified wormhole leads to $G'$, where $\alpha, \gamma$
-  and $\psi$ have been replaced by a single vertex
-  $\alpha \cup \gamma \cup \psi$. Again, the same reasoning can be made starting
-  from the other wormhole, yielding the same graph.
-\end{proof}
-
-\begin{corollary}
-  Normal forms for $\leadsto$ are unique (and are obtained after a finite number
-  of steps).
-\end{corollary}
-
-So, the non-determinism that appears when several wormholes coexist is not
-important. Wormholes can be contracted in any order, and we always obtain the
-same result---a good one.
-
-\medskip
-
-\begin{theorem}\label{thm:correctness}
-  Let $G$ be the dual representation graph of a recursive maze, and $G_{nf}$ a
-  normal form of $G$ for $\stackrel{*}{\leadsto}$. Then the nodes of $G_{nf}$
-  are labelled by the equivalence classes of $\stackrel{*}{\equiv}$.
-\end{theorem}
-
-This theorem follows from the two following lemmas, using the same notations as
-the theorem.
-
-\medskip
-
-\begin{lemma}
-  Wires in a supernode of $G_{nf} $are related by $\stackrel{*}{\equiv}$.
-\end{lemma}
-
-\begin{proof}
-  Consider a derivation
-  $G = G_0 \leadsto G_1 \leadsto \dots \leadsto G_k = G_{nf}$ leading to the
-  normal form. The result is established by induction on $i$. When $i=0$, nodes of
-  $G$ are labelled by singletons, so the property trivially holds.
-
-  Next, suppose the property holds in $G_i$. The next graph $G_{i+1}$ is
-  obtained by contracting a wormhole
-  $\Sigma \xrightarrow{X} \Theta \xleftarrow{X} \Pi$, thus ``merging'' $\Sigma$
-  and $\Pi$. The two edges forming the wormhole existed in the original graph
-  $G$: in $G$ there are $\alpha \xrightarrow{X} \beta$ and
-  $\gamma \xrightarrow{X} \delta$, where $\alpha \in \Sigma$,
-  $\beta, \gamma \in \Theta$ and $\delta \in \Pi$. By induction hypothesis,
-  $\beta \stackrel{*}{\equiv} \gamma$ (they both belong to the supernode
-  $\Theta$). This means that $\alpha \stackrel{*}{\equiv} \delta$ (by definition
-  of $\stackrel{*}{\equiv}$). Now the fact that any pair
-  $(\sigma, \pi) \in \Sigma \times \Pi$ are related by $\stackrel{*}{\equiv}$
-  follows from the transitivity of $\stackrel{*}{\equiv}$ and from the induction
-  hypothesis applied to $\Sigma$ and $\Pi$.
-\end{proof}
-
-\begin{lemma}
-  For any $i \geq 0$, if $\alpha \equiv_i \beta$, then $\alpha$ and $\beta$
-  belong to the same supernode in $G_{nf}$.
-\end{lemma}
-
-\begin{proof}
-  We prove the result by induction on $i$.  When $i=0$, we need to show that
-  wires that are connected by a local wormhole in $G$ have been contracted in
-  $G_{nf}$. Starting from $G$, we first contract an arbitrary wormhole
-  $\alpha \xrightarrow{X} \beta \xleftarrow{X} \gamma$, leading to $G_1$
-  ($G \leadsto G_1$). Then by the confluence of $\leadsto$, we know that
-  $G_1 \stackrel{*}{\leadsto} G'$. In other term, $\alpha$ and $\gamma$ belong
-  to the same supernode in $G_{nf}$. This is true for any wormhole initially
-  present in $G$.
-
-  Next, suppose the result holds for $i \geq 0$, and take two wires
-  $\alpha \equiv_{i+1} \beta$. Looking at the definition of $\Gamma_{i+1}$,
-  there are 3 cases to consider:
-\begin{itemize}
-\item $\alpha \equiv_{i} \beta$. In this case, the result directly holds by induction hypothesis.
-\item There is a wire $\gamma$ such that $\alpha \equiv_{i} \gamma$ and
-  $\gamma \equiv_{i} \beta$. By induction hypothesis, $\alpha, \beta$ and
-  $\gamma$ all belong to the same supernode.
-\item There are two wires $\gamma$ and $\delta$ and a box $X$ such that
-  $\alpha \xrightarrow{X} \gamma$, $\gamma \equiv_i \delta$ and
-  $\delta \xleftarrow{X} \beta$. By induction hypothesis, $\gamma$ and $\delta$
-  belong to the same supernode (say $\Theta$) in $G_{nf}$. Suppose, for the sake
-  of a contradiction that, in $G_{nf}$, $\alpha$ belongs to a supernode $\Sigma$
-  and that $\beta$ belongs to a different supernode $\Pi$. Then the two edges
-  $\alpha \xrightarrow{X} \gamma$ and $\beta \xrightarrow{X} \delta$ of $G$ have
-  not been removed in $G_{nf}$, but were modified to become
-  $\Sigma \xrightarrow{X} \Theta \xleftarrow{X} \Pi$. Therefore, there is a
-  contractible wormhole in $G_{nf}$, which contradicts the irreducibly of
-  $G_{nf}$.
-\end{itemize}
-\end{proof}
-
-We now discuss the implications of theorem~\ref{thm:correctness}. Starting from
-the dual representation graph of a maze, run the contraction process until a
-normal form has been obtained. To check if it is possible to exit the maze, it
-is sufficient to examine the wires in the equivalence class of the starting
-point, and test if one of them is connected to an outer IO pin. When it is the
-case, an exit path can be built explicitly (but how to do so depends on
-implementation details discussed below).
+Starting from the dual representation graph of a maze, we run the contraction
+process until death ensues. To check if it is possible to exit the maze, it is
+sufficient to examine the wires in the equivalence class of the starting point,
+and test if one of them is connected to an outer IO pin. When it is the case, an
+exit path can be built explicitly (but how to do so depends on implementation
+details discussed below).
 
 \section{Efficient deterministic implementations}
 \label{sec:implem}
@@ -1984,17 +901,17 @@ however navigate around two problems:
 \end{enumerate}
 
 When processing the next wormhole, we check if the two wires have already been
-merged and only proceed when it is not the case (this solves the first problem).
-
-When a wormhole $\alpha \xrightarrow{X.i} \beta \xleftarrow {X.j} \gamma$ is
-discovered and added to the list, we immediately remove one of the two edges
-from the graph---they would become identical later when the wormhole actually
-gets contracted and one of them would be removed anyway, so why delay the
-inevitable?  With this modification, only $E$ wormholes can be added to the
-list. We implement this as follows: we look at each edge of the initial graph in
+merged and only proceed when it is not the case (this solves the first
+problem). In addition, when a wormhole
+$\alpha \xrightarrow{X.i} \beta \xleftarrow {X.j} \gamma$ is discovered and
+added to the list, we immediately remove one of the two edges from the
+graph---they would become identical later when the wormhole actually gets
+contracted and one of them would be removed anyway, so why delay the inevitable?
+With this modification, only $E$ wormholes can be added to the list. We
+implement this as follows: we look at each edge of the initial graph in
 sequence: either it creates a wormhole with another ``hot'' edge (we register
-the wormhole and original the edge is sucked into the void), or it does not (we
-mark the edge as hot).
+the wormhole and the edge under scrutiny is sucked into the void), or
+it does not (we mark the edge as ``hot'').
 
 \begin{figure}
   \centering
@@ -2026,11 +943,10 @@ is hosted by the leader node in the original graph. Nodes that have been merged
 into larger supernode are not actually removed from the graph ; they remain
 there but become \emph{followers} (as opposed to their leader).
 
-When two (super)nodes are merged, to form the resulting supernode, one of them
-is ``absorbed'' into the other one. Hot edges pointing to the absorbee either
-create a wormhole and are dropped, or become hot edges pointing to the absorber.
-The actual issue is to detect the new wormholes that are created by the
-displacement of edges.
+When two (super)nodes are merged, one of them is in fact ``absorbed'' into the
+other one. Hot edges pointing to the absorbee either create a wormhole and are
+dropped, or become hot edges pointing to the absorber.  The actual issue is to
+detect the new wormholes that are created by the displacement of edges.
 
 A major difference with the process suggested by Fig.~\ref{fig:merge} is that we
 only move the targets of edges, not their origins. This does not affect the
@@ -2049,13 +965,14 @@ $\alpha \xrightarrow{X.i} \beta$ in the graph. % Initializing the \texttt{hot}
 
 When the algorithm starts, each node in the graph corresponds to a wire of the
 maze. Then nodes will be merged into supernodes. Maintaining the content of
-supernodes is a once-in-a-lifetime chance for us to use the celebrated
-``inverse-Ackermann'' disjoint-set data structure (also known as
-\textsc{Union-Find}). This uses the two arrays \texttt{parent} and \texttt{rank}.
+supernodes turns out to be once-in-a-lifetime chance for us to use the
+celebrated ``inverse-Ackermann'' disjoint-set data structure (also known as
+\textsc{Union-Find}). This uses the two arrays \texttt{parent} and
+\texttt{rank}.
 
 The pseudo-code of our solution in shown as Algorithm~\ref{algo:main-dense}. We
 believe that it is simple enough to be implemented in assembler by a motivated
-undergraduate student. Its step-by-step execution on the simple maze of
+undergrad. Its step-by-step execution on the simple maze of
 Fig.~\ref{fig:simple} is shown in Fig.~\ref{fig:step-by-step}. When it
 terminates, equivalence classes of $\stackrel{*}{\equiv}$ have been
 determined. This easily allows to test if the maze can be exited.
@@ -2134,7 +1051,7 @@ determined. This easily allows to test if the maze can be exited.
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     
     \draw (start) edge[->] node[above] {$A$} (K);
@@ -2159,7 +1076,7 @@ determined. This easily allows to test if the maze can be exited.
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     
     \draw (start) edge[->] node[above] {$A$} (K);
@@ -2173,7 +1090,7 @@ determined. This easily allows to test if the maze can be exited.
     \draw (R) edge[->, bend left] node[right, near end] {$C$} (B);
 
     \node[anchor=west] at (6, 2) {\texttt{pending}:};
-    \node[anchor=west] at (6.5, 1) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \zeta$};
+    \node[anchor=west] at (6.5, 1) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \epsilon$};
     \node[anchor=west] at (6.5, 1.5) {$\gamma \xrightarrow{C} \delta \xleftarrow{C} \delta$};
     \node[anchor=west] at (6, 0) {before the main loop};
 
@@ -2187,7 +1104,7 @@ determined. This easily allows to test if the maze can be exited.
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     
     \draw (start) edge[->] node[above] {$A$} (K);
@@ -2202,7 +1119,7 @@ determined. This easily allows to test if the maze can be exited.
  
     % labels à droite
     \node[anchor=west] at (6, 2) {\texttt{pending}:};
-    \node[anchor=west, lightgray] at (6.5, 1) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \zeta$};
+    \node[anchor=west, lightgray] at (6.5, 1) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \epsilon$};
     \node[anchor=west] at (6.5, 1.5) {$\gamma \xrightarrow{C} \delta \xleftarrow{C} \delta$};
   \end{tikzpicture}
 
@@ -2214,7 +1131,7 @@ determined. This easily allows to test if the maze can be exited.
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
 
     \draw (start) edge[->] node[above] {$A$} (K);
@@ -2227,9 +1144,9 @@ determined. This easily allows to test if the maze can be exited.
 
     % labels à droite
     \node[anchor=west] at (6, 2) {\texttt{pending}:};
-    \node[anchor=west, lightgray] at (6.5, 1) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \zeta$};
+    \node[anchor=west, lightgray] at (6.5, 1) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \epsilon$};
     \node[anchor=west, lightgray] at (6.5, 1.5) {$\gamma \xrightarrow{C} \delta \xleftarrow{C} \delta$};
-    \node[anchor=west] at (6.5, 0.5) {$\zeta \xrightarrow{D} \gamma \xleftarrow{D} \gamma$};
+    \node[anchor=west] at (6.5, 0.5) {$\epsilon \xrightarrow{D} \gamma \xleftarrow{D} \gamma$};
   \end{tikzpicture}
 
   \vspace{0.25cm}
@@ -2240,7 +1157,7 @@ determined. This easily allows to test if the maze can be exited.
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
 
     \draw (K) edge[->] node[above=-0.75mm] {$B$} (R);
@@ -2253,9 +1170,9 @@ determined. This easily allows to test if the maze can be exited.
      
     % labels à droite
     \node[anchor=west] at (6, 2) {\texttt{pending}:};
-    \node[anchor=west, lightgray] at (6.5, 1.5) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \zeta$};
+    \node[anchor=west, lightgray] at (6.5, 1.5) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \epsilon$};
     \node[anchor=west, lightgray] at (6.5, 1) {$\gamma \xrightarrow{C} \delta \xleftarrow{C} \delta$};
-    \node[anchor=west, lightgray] at (6.5, 0.5) {$\zeta \xrightarrow{D} \gamma \xleftarrow{D} \gamma$};
+    \node[anchor=west, lightgray] at (6.5, 0.5) {$\epsilon \xrightarrow{D} \gamma \xleftarrow{D} \gamma$};
     \node[anchor=west] at (6.5, -0.1) {$\alpha \xrightarrow{A} \gamma \xleftarrow{A} \delta$};
   \end{tikzpicture}
 
@@ -2267,7 +1184,7 @@ determined. This easily allows to test if the maze can be exited.
     \node[draw,semitransparent,fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
 
     \draw (K) edge[->] node[above=-0.75mm] {$B$} (R);
@@ -2283,9 +1200,9 @@ determined. This easily allows to test if the maze can be exited.
      
     % labels à droite
     \node[anchor=west] at (6, 2) {\texttt{pending}:};
-    \node[anchor=west, lightgray] at (6.5, 1.5) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \zeta$};
+    \node[anchor=west, lightgray] at (6.5, 1.5) {$\beta \xrightarrow{B} \gamma \xleftarrow{B} \epsilon$};
     \node[anchor=west, lightgray] at (6.5, 1) {$\gamma \xrightarrow{C} \delta \xleftarrow{C} \delta$};
-    \node[anchor=west, lightgray] at (6.5, 0.5) {$\zeta \xrightarrow{D} \gamma \xleftarrow{D} \gamma$};
+    \node[anchor=west, lightgray] at (6.5, 0.5) {$\epsilon \xrightarrow{D} \gamma \xleftarrow{D} \gamma$};
     \node[anchor=west, lightgray] at (6.5, -0.1) {$\alpha \xrightarrow{A} \gamma \xleftarrow{A} \delta$};
   \end{tikzpicture}
 \end{center}
@@ -2303,12 +1220,12 @@ destroys an edge). \textsc{Merge} can only be invoked $W-1$ times. So the total
 time spent in \textsc{Merge} is $\bigO{BW}$ and the total time spent in calls to
 \textsc{Find} is $\bigO{E \alpha(W)}$, where $\alpha$ is the inverse-Ackermann
 function (thanks to the celebrated amortized analysis
-of~\cite{10.1145/62.2160}). Note that $\alpha(W)$ is upper-bounded by 4 when its
-$W$ is less than the number of atoms in the universe. So, the final complexity
-of \textsc{CollapseMazeDense} is $\bigO{BW + E \alpha(W)}$.
-
-$E \approx W^2$ and $W \approx B$, then this gives a nearly-quadratic algorithm,
-improving upon the known cubic one.
+of~\cite{10.1145/62.2160}). % Note that $\alpha(W)$ is upper-bounded by 4 when its
+% $W$ is less than the number of atoms in the universe.
+So, the final complexity of \textsc{CollapseMazeDense} is
+$\bigO{BW + E \alpha(W)}$. If $E \approx W^2$ and $W \approx B$, then this gives
+a nearly-quadratic algorithm, improving upon the known cubic one presented in
+section~\ref{sec:modelchecking}.
 
 \subsection{Sparse mazes}
 \label{sec:sparse}
@@ -2319,7 +1236,7 @@ $B$ potential edges, even if just a few are present. We can use a lightweight
 variant of the ``sparse array'' technique abundantly used in very early sparse
 matrix codes and rediscovered 20 years later~\cite{10.1145/176454.176484} in a
 different context. To efficiently iterate on the hot incoming edges to a node,
-we also use an auxiliary array \texttt{hotbox} where $\texttt{hotbox}[\omega]$
+we also use an auxiliary array \texttt{hotpot} where $\texttt{hotpot}[\omega]$
 contains a list of $X$'s such that $\texttt{hot}[\omega, X] \neq \texttt{none}$.
 
 Also, when merging two nodes, we could absorb the ``smaller'' one (with less
@@ -2329,7 +1246,6 @@ instance it is at work in Hopcroft's DFA minimization
 algorithm~\cite{hopcroft1971nlogn}). Unfortunately, this breaks down the
 guarantees offered by the disjoint set data structure. We therefore make do with
 a more naive solution: we eagerly update all nodes when two sets are joined.
-
 All nodes have a pointer (\texttt{leader}) to the leader node in their supernode
 (possibly themselves). Supernode leaders have a list (\texttt{followers}) of
 nodes in their supernode. The \emph{size} of a (super)node is the number of
@@ -2356,7 +1272,7 @@ larger one. More precisely:
    \State $\texttt{pending} \gets (\alpha, X, i, \beta, j, \gamma)) :: \texttt{pending}$       \Comment{detected $\alpha \xrightarrow{X.i} \beta \xleftarrow{X.j} \gamma$}
    \Else
    \State $\texttt{hot}[\beta, X] \gets \texttt{some} (\alpha, i)$   
-   \State $\texttt{hotbox}[\beta] \gets X :: \texttt{hotbox}[\beta]$    \Comment{Register non-empty location}
+   \State $\texttt{hotpot}[\beta] \gets X :: \texttt{hotpot}[\beta]$    \Comment{Register non-empty location}
    \EndIf
    \EndProcedure
 
@@ -2374,7 +1290,7 @@ larger one. More precisely:
   \State $\texttt{followers}[\pi] \gets \omega :: \texttt{followers}[\pi]$ 
   \EndFor
 
-  \For{each $X \in \texttt{hotbox}[\sigma]$}                          \Comment{sparse iteration}       
+  \For{each $X \in \texttt{hotpot}[\sigma]$}                          \Comment{sparse iteration}       
   \State $\texttt{some} (\omega, i) \gets \texttt{hot}[\sigma, X]$    \Comment{looking at $\omega \xrightarrow{X.i} \sigma$}
   \State $\Call{AddEdge'}{\omega, X, i, \pi}$                          \Comment{replace by $\omega \xrightarrow{X.i} \pi$}
   \EndFor  
@@ -2388,7 +1304,7 @@ larger one. More precisely:
     \State $\texttt{size}[\alpha] \gets 1$
     \State $\texttt{leader}[\alpha] \gets \alpha$                       \Comment{$\alpha$ is a supernode by itself}
     \State $\texttt{followers}[\alpha] \gets \alpha :: \texttt{[]}$
-    \State $\texttt{hotbox}[\alpha] \gets \texttt{[]}$                 
+    \State $\texttt{hotpot}[\alpha] \gets \texttt{[]}$                 
     \For{$0 \leq X < B$}
     \State $\texttt{hot}[\alpha,X] \gets \texttt{none}$                 \Comment{potential \texttt{hot}-spot}
     \EndFor
@@ -2413,7 +1329,7 @@ larger one. More precisely:
 \textsc{AddEdge'} still runs in constant time, and \textsc{Merge}
 runs in time dominated by the \texttt{size} of the smaller supernode: it takes
 constant-time per wire in the smaller supernode, plus constant time per hot edge
-pointing to the smaller supernode (thanks to the \texttt{hotbox} array)---and
+pointing to the smaller supernode (thanks to the \texttt{hotpot} array)---and
 not all edges are hot, hence the upper-bound.
 
 % \textsc{Find} runs in time $\bigO{W}$ in the worst-case (it may go through all
@@ -2422,7 +1338,7 @@ not all edges are hot, hence the upper-bound.
 % use path compression.
 
 The number of iterations of the \textbf{while} loop is again at most $E$ and it
-does a constant number of operation per iteration, excluding calls to
+does a constant number of operations per iteration, excluding calls to
 \textsc{Merge}. It thus remains to control the total time spent in
 \textsc{Merge}---and this is the tricky part. As the algorithm progresses, the
 sequence of merges can be represented by a binary forest. The wires of the maze
@@ -2433,43 +1349,43 @@ size (as defined above). When two roots of labels $x \leq y$ are joined, the
 result has label $x + y$, and we are ``charged'' $x$ operations (the smaller
 size).
 
-In the example detailed in Fig.~\ref{fig:step-by-step}, this forest is in fact a
-binary tree:
-\begin{center}
-\begin{tikzpicture}[scale=0.55]
-  \node[draw,fill=Orchid,text=white]     at (0, -2) (K) {$\beta$};
-  \node[draw,fill=LimeGreen,text=white]  at (2, -2) (G) {$\zeta$};
-  \node[draw,fill=red,text=white]        at (4, -2) (R) {$\gamma$};
-  \node[draw,fill=Aquamarine,text=white] at (6, -2) (B) {$\delta$};
-  \node[draw, fill=orange]               at (8, -2) (start) {$\alpha$};
+% In the example detailed in Fig.~\ref{fig:step-by-step}, this forest is in fact a
+% binary tree:
+% \begin{center}
+% \begin{tikzpicture}[scale=0.55]
+%   \node[draw,fill=Orchid,text=white]     at (0, -2) (K) {$\beta$};
+%   \node[draw,fill=LimeGreen,text=white]  at (2, -2) (G) {$\epsilon$};
+%   \node[draw,fill=red,text=white]        at (4, -2) (R) {$\gamma$};
+%   \node[draw,fill=Aquamarine,text=white] at (6, -2) (B) {$\delta$};
+%   \node[draw, fill=orange]               at (8, -2) (start) {$\alpha$};
 
-  \node[draw,circle] at (0, 0) (K2) {2};
-  \node[draw,circle] at (2, 0) (G2) {1};
-  \node[draw,circle] at (4, 0) (R2) {5};
-  \node[draw,circle] at (6, 0) (B2) {4};
-  \node[draw,circle] at (8, 0) (start2) {1};
+%   \node[draw,circle] at (0, 0) (K2) {2};
+%   \node[draw,circle] at (2, 0) (G2) {1};
+%   \node[draw,circle] at (4, 0) (R2) {5};
+%   \node[draw,circle] at (6, 0) (B2) {4};
+%   \node[draw,circle] at (8, 0) (start2) {1};
   
-  \node[draw,circle] at (1, 2)  (foo) {3};
-  \node[draw,circle] at (5, 2)  (bar) {9};
-  \node[draw,circle] at (3, 4)  (foobar) {12};
-  \node[draw,circle] at (5.5, 6) (root) {13};
+%   \node[draw,circle] at (1, 2)  (foo) {3};
+%   \node[draw,circle] at (5, 2)  (bar) {9};
+%   \node[draw,circle] at (3, 4)  (foobar) {12};
+%   \node[draw,circle] at (5.5, 6) (root) {13};
 
-  \draw (K) edge (K2);
-  \draw (B) edge (B2);
-  \draw (G) edge (G2);
-  \draw (R) edge (R2);
-  \draw (start) edge (start2);
+%   \draw (K) edge (K2);
+%   \draw (B) edge (B2);
+%   \draw (G) edge (G2);
+%   \draw (R) edge (R2);
+%   \draw (start) edge (start2);
   
-  \draw (K2) edge (foo);
-  \draw (G2) edge[very thick] node[right] {1} (foo);
-  \draw (B2) edge[very thick] node[right] {4} (bar);
-  \draw (R2) edge (bar);
-  \draw (foo) edge[very thick] node[left] {3} (foobar);
-  \draw (bar) edge (foobar);
-  \draw (foobar) edge (root);
-  \draw (start2) edge[very thick] node[right] {1} (root);
-\end{tikzpicture}
-\end{center}
+%   \draw (K2) edge (foo);
+%   \draw (G2) edge[very thick] node[right] {1} (foo);
+%   \draw (B2) edge[very thick] node[right] {4} (bar);
+%   \draw (R2) edge (bar);
+%   \draw (foo) edge[very thick] node[left] {3} (foobar);
+%   \draw (bar) edge (foobar);
+%   \draw (foobar) edge (root);
+%   \draw (start2) edge[very thick] node[right] {1} (root);
+% \end{tikzpicture}
+% \end{center}
 
 Let $\mathcal{F}$ denote an arbitrary merge forest built from the dual
 representation graph of a recursive maze. Its $W$ leaves are labelled with the
@@ -2479,39 +1395,39 @@ $S \leq W + E$.  Let $C(\mathcal{F})$ denote the total amount ``charged'' by
 this merge forest (i.e., an upper-bound on the total number of operations spent
 in \textsc{Merge} during the process). Then we have:
 
-\medskip
+%\medskip
 
 \begin{lemma}
   $C(\mathcal{F}) \leq S \log_2 S$.
 \end{lemma}
 
-\begin{proof}  
-  Let $t_\omega$ denote the number of times the supernode containing wire
-  $\omega$ is absorbed into a larger supernode in $\mathcal{F}$ (this counts the
-  number of times $\omega$ belongs to the smallest of two sets being joined). By
-  definition,
-  \[
-    C(\mathcal{F}) \leq \sum_{\omega \in \mathcal{W}} \texttt{size}[\omega] \times t_\omega.
-  \]
-  Our plan is to upper-bound the $t_\omega$'s. Because of the union-by-size
-  rule, each time the supernode containing $\omega$ is the smaller of the two,
-  the size of new supernode created by the merge is at least twice as large. If
-  follows that the root containing $\omega$ must have size at least
-  $\texttt{size}[\omega] 2^{t_\omega}$. Because this cannot be greater than $S$,
-  it follows that $t_\omega \leq \log_2 (S / \texttt{size}[\omega])$. We
-  conclude that
-  \[
-    C(\mathcal{F}) \leq \sum_{\omega \in \mathcal{W}} \texttt{size}[\omega] \times \log_2 \frac{E}{\texttt{size}[\omega]}
-  \]
-  and the lemma is proved because $S = \sum_\omega \texttt{size}[\omega]$.
-\end{proof}
+% \begin{proof}  
+%   Let $t_\omega$ denote the number of times the supernode containing wire
+%   $\omega$ is absorbed into a larger supernode in $\mathcal{F}$ (this counts the
+%   number of times $\omega$ belongs to the smallest of two sets being joined). By
+%   definition,
+%   \[
+%     C(\mathcal{F}) \leq \sum_{\omega \in \mathcal{W}} \texttt{size}[\omega] \times t_\omega.
+%   \]
+%   Our plan is to upper-bound the $t_\omega$'s. Because of the union-by-size
+%   rule, each time the supernode containing $\omega$ is the smaller of the two,
+%   the size of new supernode created by the merge is at least twice as large. If
+%   follows that the root containing $\omega$ must have size at least
+%   $\texttt{size}[\omega] 2^{t_\omega}$. Because this cannot be greater than $S$,
+%   it follows that $t_\omega \leq \log_2 (S / \texttt{size}[\omega])$. We
+%   conclude that
+%   \[
+%     C(\mathcal{F}) \leq \sum_{\omega \in \mathcal{W}} \texttt{size}[\omega] \times \log_2 \frac{E}{\texttt{size}[\omega]}
+%   \]
+%   and the lemma is proved because $S = \sum_\omega \texttt{size}[\omega]$.
+% \end{proof}
 
-Therefore, the total running time of \textsc{CollapseMazeSparse} is
-$\bigO{BW + E \log E}$. At first glance, this could seem like a
-\emph{decremental} improvement compared to \textsc{CollapseMazeDense}. However,
-the \emph{only} part that requires $BW$ operations is the initialization of the
-$\texttt{hot}$ array. We therefore see two ways to cheat our way out of this
-embarrassing situation.
+The (very standard) proof is given in the full version. Therefore, the total
+running time of \textsc{CollapseMazeSparse} is $\bigO{BW + E \log E}$. At first
+glance, this could seem like a \emph{decremental} improvement compared to
+\textsc{CollapseMazeDense}. However, the \emph{only} part that requires $BW$
+operations is the initialization of the $\texttt{hot}$ array. We therefore see
+two ways to cheat our way out of this embarrassing situation.
 
 \begin{itemize}
 \item We initially need the \texttt{hot} array to be filled with the
@@ -2522,12 +1438,20 @@ embarrassing situation.
   \texttt{hot} array to its initial state with only a constant factor increase
   in the running time (just store the indices of all modified locations and
   restore them to \texttt{none} at the end of the algorithm).
-
   It follows that if a long sequence of mazes had to be solved in sequence, then
   a single (large enough) \texttt{hot} array could be initialized \emph{once}
   and used several times, so the cost of its initialization could be amortized
   over an (arbitrarily long) sequence of uses.
 
+\item A good-natured reviewer suggested that ``\emph{the requirement that the
+    array is initialized with \texttt{none} is not unreasonable at all. All you
+    really need is the model of computation to provide \emph{any} uniform
+    representation of the initial memory and then just call that your
+    \texttt{none} value}''. We appreciate the empathy. But unlike this
+  sickeningly well-meaning stance, we believe the reality is quite different: no
+  existing hardware architecture that can run compiled C programs offers
+  ``free'' memory initialization.
+  
 \item Initializing the \texttt{hot} array annoys us. Wo we could simply get rid
   of it and use a hash table instead. It will ever only hold $E$ entries, and we
   have a time budget to initialize an array of size $E \log E$, so that we can
@@ -2544,7 +1468,7 @@ reachable (without modifying the stack). In this section we show how to augment
 Algorithms~\ref{algo:main-dense} and~\ref{algo:main-sparse} to provide the
 computation of such paths without asymptotically increasing their complexity.
 
-In dual representation graph, an edge $\alpha \xrightarrow{X.i} \beta$ is
+In the dual representation graph, an edge $\alpha \xrightarrow{X.i} \beta$ is
 labelled with an instruction (``$X.i$''). This describes a feasible move in the
 maze (and a valid transition in the pushdown automaton that pushes $X$).
 
@@ -2557,7 +1481,7 @@ sequence identifiers to actual sequences of instructions and instruction
 sequence identifiers. This time, an edge $\alpha \xrightarrow[\#42]{X} \beta$
 means that the sequence of instruction $\#42$ takes the player from wire
 $\alpha$ to wire $\beta$, while entering box $X$. So, before the graph rewriting
-process even start, we transform the dual representation graph into the
+process even starts, we transform the dual representation graph into the
 \emph{extended dual representation graph} shown in Fig.~\ref{fig:extended}.
 
 We then perform the same graph rewriting process, except that we now take care
@@ -2572,11 +1496,11 @@ $\overline{\# \mathcal{K}}$ must be added before their instruction sequence. We
 finally record the ``spanning'' edge
 $\alpha \xrightarrow{\# \mathcal{K}} \gamma$.
 
-\begin{figure}
+\begin{figure}[tb]
 \begin{center}
   \begin{tikzpicture}[scale=1.5]
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
@@ -2609,7 +1533,7 @@ $\alpha \xrightarrow{\# \mathcal{K}} \gamma$.
 
 
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 \begin{tikzpicture}[every node/.style={font=\small}, every edge/.style={draw,shorten >=0.5mm}]
   \begin{scope}
@@ -2617,7 +1541,7 @@ $\alpha \xrightarrow{\# \mathcal{K}} \gamma$.
   \node[draw] at (2, 0) (c) {$\gamma$};
   \node[draw] at (1, 3) (b) {$\beta$};
   \node[draw] at (-1.5, 1.5) (d) {$\delta$};
-  \node[draw] at (3.5, 1.5) (e) {$\zeta$};
+  \node[draw] at (3.5, 1.5) (e) {$\epsilon$};
   \node[draw] at (0, -2) (f) {$\phi$};
   \node[draw] at (2, -2) (g) {$\psi$};
 
@@ -2641,7 +1565,7 @@ $\alpha \xrightarrow{\# \mathcal{K}} \gamma$.
   \node[draw] at (1, 0) (ac) {$\gamma$};
   \node[draw] at (1, 3) (b) {$\beta$};
   \node[draw] at (-1.5, 1.5) (d) {$\delta$};
-  \node[draw] at (3.5, 1.5) (e) {$\zeta$};
+  \node[draw] at (3.5, 1.5) (e) {$\epsilon$};
   \node[draw] at (0, -2) (f) {$\phi$};
   \node[draw] at (2, -2) (g) {$\psi$};
 
@@ -2673,12 +1597,11 @@ $\alpha \xrightarrow{\# \mathcal{K}} \gamma$.
   $\alpha$ and registers one new instruction sequence identifier for each one.}
 \end{figure}
 
-We the rewriting process is over, the spanning edge form (rooted) spanning trees
+When the rewriting process is over, the spanning edge form (rooted) spanning trees
 of the connected components. Therefore, when a pair of nodes are reachable by a
-path, this path can be assembled by following the spanning edges.
-
-Compared to Algorithms~\ref{algo:main-dense} and~\ref{algo:main-sparse}, this
-requires the following modifications:
+path, this path can be assembled by following the spanning edges. Compared to
+Algorithms~\ref{algo:main-dense} and~\ref{algo:main-sparse}, this requires the
+following modifications:
 \begin{itemize}
 \item Not only the target, but also the origin of hot edges incident to an
   ``absorbed'' node must be modified. This requires each node to we aware not
@@ -2698,22 +1621,65 @@ requires the following modifications:
 \end{itemize}
 
 Fig.~\ref{fig:path-finding} illustrates the process. In the end, this produces the path \#18, that expands as:
-\begin{align*}
-  \#18
-  &= \# 16; \overline{\#14} \\
-  &= (A.4; \#15); (\overline{A.2}; \#11) \\
-  &= A.4; (\#12; \overline{D.1}); \overline{A.2}; (C.5; \overline{C.3});  \\
-  &= A.4; (\#10; \#11); \overline{D.1}; \overline{A.2}; C.5; \overline{C.3} \\
-  &= A.4; (\overline{\#9}; D.3); (C.5; \overline{C.3}); \overline{D.1}; \overline{A.2}; C.5; \overline{C.3} \\
-  &= A.4; B.1; \overline{B.2}; D.3; C.5; \overline{C.3}; \overline{D.1}; \overline{A.2}; C.5; \overline{C.3}
-\end{align*}
+\[
+  \#18 = \# 16; \overline{\#14} = (A.4; \#15); (\overline{A.2}; \#11) = A.4; B.1; \overline{B.2}; D.3; C.5; \overline{C.3}; \overline{D.1}; \overline{A.2}; C.5; \overline{C.3}
+\]
+% \begin{align*}
+%   \#18
+%   &= \# 16; \overline{\#14} \\
+%   &= (A.4; \#15); (\overline{A.2}; \#11) \\
+%   &= A.4; (\#12; \overline{D.1}); \overline{A.2}; (C.5; \overline{C.3});  \\
+%   &= A.4; (\#10; \#11); \overline{D.1}; \overline{A.2}; C.5; \overline{C.3} \\
+%   &= A.4; (\overline{\#9}; D.3); (C.5; \overline{C.3}); \overline{D.1}; \overline{A.2}; C.5; \overline{C.3} \\
+%   &= A.4; B.1; \overline{B.2}; D.3; C.5; \overline{C.3}; \overline{D.1}; \overline{A.2}; C.5; \overline{C.3}
+% \end{align*}
 This is indeed an exit path, but not one of optimal length (compare to the one
 given earlier in the text). Note that exponentially-long paths can be
 represented in polynomial space by the list of instruction sequence identifiers.
-
 We leave the problem of producing a minimal-length exit path open for future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Conclusion: a daunting open problem}
+
+Checking emptiness of the intersection of \emph{two} context-free
+languages is undecidable (this enables the simulation of an arbitrary Turing
+machine). Therefore, it could very well be that trying to get out of \emph{two}
+recursive mazes simultaneously might be difficult. This problem can be thought
+of as follows: suppose you have an application to play recursive mazes
+(\verb|\begin{shameless-advertisement}|such as the one we designed, available at
+  \url{https://github.com/orelcosseron/Fractal-Maze-Python}\verb|\end{shameless-advertisement}|). In
+such a game, the mazes are orthogonal: paths are either horizontal or
+vertical. The player controls the location of a sprite using arrow keys, as is
+common in ``top down'' adventure games, such as \emph{The Legend of
+  Zelda}. Moving towards a wall does nothing: the sprite cannot cross the
+wall.
+
+Now suppose that \emph{two} instances of the application are launched, with two
+different mazes, and that \emph{both} applications receive the same keyboard
+inputs (see Fig.~\ref{fig:two}). In the situation shown in the figure, going
+down does nothing; going up moves the sprite in the right maze; going left moves
+the sprite in the left maze; going right moves the sprite in both mazes. Given
+the geometric description of two mazes, the question is to decide if there is a
+(finite) sequence of keyboard inputs that exits both mazes.
+
+It is not completely obvious that this problem is even decidable (we may get
+away with it because of the severe restrictions on the class of context-free
+languages associated to recursive mazes). In any case, this is an exciting
+perspective for future work.
+
+\begin{figure}[tbh]
+\begin{center}
+  \includegraphics[width=0.45\textwidth]{screenshot_Alice.png}
+  \hfill
+  \includegraphics[width=0.45\textwidth]{screenshot_square.png}
+\end{center}
+\caption{\label{fig:two} Solving two mazes at the same time---with a single
+  keyboard. Is it decidable? The player is represented by a blue dot, and its
+  current path is shown by a blue or red line.}
+\end{figure}
 
 \begin{figure}
 \begin{center}
@@ -2723,7 +1689,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
@@ -2762,7 +1728,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
@@ -2790,7 +1756,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
 
     \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
     \node[anchor=west] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
-    \node[anchor=west] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \epsilon$};
 
     \node[anchor=west] at (10.5, -0.5) {before the main loop};
   \end{scope}
@@ -2804,7 +1770,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
@@ -2838,7 +1804,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
   
     \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
     \node[anchor=west] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
-    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \epsilon$};
 \end{scope}
   \end{tikzpicture}
 
@@ -2850,7 +1816,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.125);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
@@ -2893,7 +1859,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
 
     \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
     \node[anchor=west,lightgray] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
-    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \epsilon$};
     \node[anchor=west] at (10.5, 0) {$\beta \xrightarrow[\#12]{D} \gamma \xleftarrow[\#3]{D} \gamma$};
   \end{scope}
 \end{tikzpicture}
@@ -2906,7 +1872,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.125);
     
    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw, fill=orange] at (3, 2) (start) {$\alpha$};
@@ -2953,7 +1919,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
 
     \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
     \node[anchor=west,lightgray] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
-    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \epsilon$};
     \node[anchor=west,lightgray] at (10.5, 0) {$\beta \xrightarrow[\#12]{D} \gamma \xleftarrow[\#3]{D} \gamma$};
     \node[anchor=west] at (10.5, -0.75) {$\alpha \xrightarrow[\# 16]{A} \gamma \xleftarrow[\# 14]{A} \gamma$};
   \end{scope}
@@ -2967,7 +1933,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.25);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
-    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\zeta$};
+    \node[draw,semitransparent,fill=LimeGreen,text=white] at (0, 0) (G) {$\epsilon$};
     \node[draw,semitransparent,fill=Aquamarine,text=white] at (2, 0) (B) {$\delta$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,semitransparent,fill=orange] at (3, 2) (start) {$\alpha$};
@@ -3015,7 +1981,7 @@ We leave the problem of producing a minimal-length exit path open for future wor
   
     \node[anchor=west] at (10.5, 2) {\texttt{pending}:};
     \node[anchor=west,lightgray] at (10.5, 1.5) {$\gamma \xrightarrow[\# 8]{C} \delta \xleftarrow[\# 6]{C} \delta$};
-    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \zeta$};
+    \node[anchor=west,lightgray] at (10.5, 0.75) {$\beta \xrightarrow[\#2]{B} \gamma \xleftarrow[\#4]{B} \epsilon$};
     \node[anchor=west,lightgray] at (10.5, 0) {$\beta \xrightarrow[\#12]{D} \gamma \xleftarrow[\#3]{D} \gamma$};
     \node[anchor=west,lightgray] at (10.5, -0.75) {$\alpha \xrightarrow[\# 16]{A} \gamma \xleftarrow[\# 14]{A} \gamma$};
   \end{scope}
@@ -3027,181 +1993,8 @@ We leave the problem of producing a minimal-length exit path open for future wor
 \end{figure}
 
 
-\section{Conclusion: a daunting open problem}
-
-Checking if a context-free language is empty is non only decidable, but can be
-done in polynomial time. For this reason, it was clear from the outset that
-recursive mazes could not pose a major computational problem.
-
-However, checking emptiness of the intersection of \emph{two} context-free
-languages is undecidable (this enables the simulation of an arbitrary Turing
-machine). Therefore, it could very well be that trying to get out of \emph{two}
-recursive mazes simultaneously might be difficult. This problem can be thought
-of as follows: suppose you have an application to play recursive mazes
-(\verb|\begin{shameless-advertisement}|such as the one we designed, available at
-  \url{https://github.com/orelcosseron/Fractal-Maze-Python}\verb|\end{shameless-advertisement}|). In
-such a game, the mazes are orthogonal: paths are either horizontal or
-vertical. The player controls the location of a sprite using arrow keys, as is
-common in ``top down'' adventure games, such as \emph{The Legend of
-  Zelda}. Moving towards a wall does nothing: the sprite cannot cross the
-wall.
-
-\begin{figure}
-\begin{center}
-  \includegraphics[width=0.49\textwidth]{screenshot_Alice.png}
-  \includegraphics[width=0.49\textwidth]{screenshot_square.png}
-\end{center}
-\caption{\label{fig:two} Solving two mazes at the same time---with a single
-  keyboard. Is it decidable? The player is represented by a blue dot, and its
-  current path is shown by a blue or red line.}
-\end{figure}
-
-Now suppose that \emph{two} instances of the application are launched, with two
-different mazes, and that \emph{both} applications receive the same keyboard
-inputs (see Fig.~\ref{fig:two}). In the situation shown in the figure, going
-down does nothing; going up moves the sprite in the right maze; going left moves
-the sprite in the left maze; going right moves the sprite in both mazes. Given
-the geometric description of two mazes, the question is to decide if there is a
-(finite) sequence of keyboard inputs that exits both mazes.
-
-It is not completely obvious that this problem is even decidable (we may get
-away with it because of the severe restrictions on the class of context-free
-languages associated to recursive mazes). In any case, this is an exciting
-perspective for future work
-
-%\bibliographystyle{plainurl}
+\clearpage
 \bibliography{biblio}
-
-\appendix
-
-\section{Bonus material: the $\lambda$-maze}
-
-Start from a context-free grammar describing the syntax of everyone's favorite
-programming language: the pure lambda-calculus. Here in Backus-Naur form:
-\[
-  L \mathrel{::=} \lambda x. L \vert x \vert (L) \vert L L
-\]
-To generate a recursive maze from this, we basically compute the
-Chomsky-Schützenberger representation of $L$. To this goal, we introduce several
-pairs of matching symbols ($a$ and $\overline{a}$, $b$ and $\overline{b}$,
-etc.). We modify the language to wrap each occurrence of a non-terminal between fresh matching symbols.
-\begin{align}
-  L' &\rightarrow a L' \overline{a} \\
-  L' &\rightarrow x \overline{x} \\
-  L' &\rightarrow c L' \overline{c} \\
-  L' &\rightarrow d L' \overline{d} e L' \overline{e}
-\end{align}
-We also define an erasing homomorphism $h$ such that $h(\omega)$ is the empty string, except for:
-\begin{align*}
-  h(a) &= \lambda x. \\
-  h(x) &= x \\
-  h(c) &= ( \\
-  h(\overline{c}) &= ).
-\end{align*}
-
-The goal is that $L = h(L')$, and $L'$ is made of ensure that it is made of
-well-nested words ($L'$ is contained in a Dyck language). Next, we describe a
-finite automaton describing the allowed sequencing of symbols in $L'$. It has
-two states per non-terminal in the grammar, here $L_{in}$ and
-$L_{out}$. Intuitively, $L_{in}$ in the state we are in before starting to read
-a string generated by the non-terminal $L'$, while $L_{out}$ is the state we are
-in when it is done. The initial state is $L_{in}$, and the accepting state is
-$L_{out}$. There is also an extra state per pair of adjacent terminal symbols in
-the productions of $L'$.
-
-\begin{tikzpicture}
-  \node[state, initial] at (0, 0) (Lin) {$L_{in}$};
-  \node[state, below right=of Lin] (qx) {$q_2$};
-  \node[state, accepting, above right=of qx] (Lout) {$L_{out}$};
-  \node[state, above right=of Lin] (qmid) {$q_4$};
-
-  \path[->] (Lin) edge [loop below] node[below] {$a, c, d$} ()
-                  edge node[above] {$x$} (qx)
-            (qx) edge node[above] {$\overline{x}$} (Lout)
-            (Lout) edge [loop right] node[right] {$\overline{a}, \overline{c}, \overline{e}$} ()
-                   edge [] node[above] {$\overline{d}$} (qmid)
-            (qmid) edge [] node[above] {$e$} (Lin);
-\end{tikzpicture}
-
-To turn this into the dual representation graph of a maze: replace
-$q \xrightarrow{\overline{u}} q'$ by $q \xleftarrow{u} q'$, and add an extra
-  symbol for the start and the end (pushed when the game starts, popped only at the end to exit the maze).
-
-\begin{tikzpicture}
-  \node[wire, fill=orange, text=white] at (0, 0) (alpha) {$\alpha$};
-  \node[wire, fill=Orchid, text=white] at (2, 0) (Lin) {$\beta$};
-  \node[wire, fill=red, text=white] at (4, -2) (qx) {$\gamma$};
-  \node[extra box] at (6, 0) (Lout) {};
-  \node[wire, fill=Aquamarine, text=white] at (6, 0) {$\delta$};
-  \node[wire, fill=LimeGreen, text=white] at (4, 2) (qmid) {$\epsilon$};
-
-  \path[->] (alpha) edge node[above] {$f$} (Lin)
-            (Lin) edge [loop below] node[below] {$a, c, d$} ()
-                  edge node[above] {$x$} (qx)
-            (Lout) edge [loop right] node[right] {$a, c, e, f$} ()
-                   edge node[above] {$x$} (qx)
-            (qmid) edge node[above] {$e$} (Lin)
-                   edge node[above] {$d$} (Lout);       
-\end{tikzpicture}
-
-  
-
-%   \node[wire] at (90:3) (alpha) {$\alpha$};
-%   \draw (alpha) edge[loop above] node[above] {$B, O, L$} ();
-
-% %  \draw[fill=black] (0, 0) circle[radius=1mm];
-
-%   \node[extra box] at (180:3) (delta) {};
-%   \node[wire] at (180:3) {$\delta$};
-%   \draw (delta) edge[loop left] node[left] {$L, O$} ();
-
-%   \node[wire] at (135:3) (epsilon) {$\epsilon$};
-%   \draw (alpha) edge[->] node[above] {$x$} (epsilon);
-%   \draw (delta) edge[->] node[left] {$x$} (epsilon);
-  
-%   \node[wire] at (45:3) (zeta) {$\zeta$};
-%   \node[wire] at (0:3) (eta) {$\eta$};
-%   \node[wire] at (-45:3) (beta) {$\beta$};
-
-%   \draw (alpha) edge[->] node[above] {$y$} (zeta);
-%   \draw (eta) edge[->] node[right] {$y$} (zeta);
-%   \draw (eta) edge[->] node[right] {$C$} (beta);
-
-%   \node[wire] at (120:1.5) (gamma) {$\gamma$};
-%   \node[wire] at (-45:1) (theta) {$\theta$};
-
-%   \draw (beta) edge[->] node[above] {$u$} (theta);
-%   \draw (gamma) edge[->] node[above] {$u$} (theta);
-%   \draw (gamma) edge[loop above] node[above=-1mm] {$E, H$} ();
-  
-%   \node[wire] at (225:1.5) (lambda) {$\lambda$};
-%   \node[wire] at (225:3) (kappa) {$\kappa$};
-
-%   \draw (lambda) edge[->] node[below, near start] {$H$} (beta);
-%   \draw (lambda) edge[->] node[below, near start] {$G$} (delta);
-  
-%   \draw (kappa) edge[->] node[below] {$D$} (beta);
-%   \draw (kappa) edge[->] node[left] {$B$} (delta);
-
-%   \draw (beta) edge[->] node[right] {$F, G$} (alpha);
-%   \draw (delta) edge[->, bend left] node[below=0.5mm] {$C, D$} (gamma);
-%   \draw (gamma) edge[->, bend left] node[below=0mm] {$F$} (delta);
-  
-%   \node[wire] at (-30:4.5) (iota) {$\iota$};
-%   \node[wire] at (-60:4.5) (mu) {$\mu$};
-
-%   \draw (beta) edge[->] node[above] {$v$} (iota);
-%   \draw (mu) edge[->] node[below right] {$v$} (iota);
-%   \draw (mu) edge[->] node[left] {$E$} (beta);
-
-%   \node at (5, 3) {$x, y, u, v \leadsto x$};
-%   \node at (5, 2) {$L \leadsto \lambda x.$};
-%   \node at (5, 1) {$O,B,F,G \leadsto ($};  
-% \end{tikzpicture}
-
-
-
-Language of reduced words?
 
 \end{document}
 
