@@ -12,10 +12,8 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
-\usepackage[normalem]{ulem}
 
 \usepackage{tikz}
-%\usetikzlibrary{quotes}
 \usetikzlibrary{calc}
 \usetikzlibrary{automata}
 \usetikzlibrary{positioning}
@@ -32,10 +30,6 @@
 \newcommand{\bigOmega}[1]{\ensuremath{\Omega\left( #1 \right)} }
 \newcommand{\bigTheta}[1]{\ensuremath{\Theta\left( #1 \right)} }
 \newcommand{\Prob}{\mathrm{Pr}}
-
-\newcommand{\red}{\color{red}}
-\newcommand{\FIXME}{{\red \textbf{FIXME}}\xspace}
-\newcommand{\TODO}[1]{{\red \textbf{TODO}:} #1\xspace}
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
 
@@ -870,7 +864,7 @@ graph is therefore provided as an \texttt{edge list array}, where the edges
 coming out of wire $\omega$ are given in $\texttt{G}[\omega]$.
 
 Tuples, also known as records or \texttt{struct}, can be (de)constructed in
-constant time. We make abundant use of \sout{blockchains} linked lists, and we
+constant time. We make abundant use of linked lists, and we
 employ the following notations:
 \begin{itemize}
 \item \texttt{[]} denotes the empty list (a \texttt{NULL} pointer).
@@ -1047,7 +1041,7 @@ determined. This easily allows to test if the maze can be exited.
 
 \begin{figure}
 \begin{center}
-  \begin{tikzpicture}[scale=1]       % initial graph
+  \begin{tikzpicture}[scale=0.93]       % initial graph
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1072,7 +1066,7 @@ determined. This easily allows to test if the maze can be exited.
   \vspace{0.25cm}
 
   
-  \begin{tikzpicture}[scale=1]       % STEP 0
+  \begin{tikzpicture}[scale=0.93]       % STEP 0
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1100,7 +1094,7 @@ determined. This easily allows to test if the maze can be exited.
   \hrule
   \vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 1
+  \begin{tikzpicture}[scale=0.93]      % STEP 1
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1127,7 +1121,7 @@ determined. This easily allows to test if the maze can be exited.
   \hrule
   \vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 2
+  \begin{tikzpicture}[scale=0.93]      % STEP 2
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1153,7 +1147,7 @@ determined. This easily allows to test if the maze can be exited.
   \hrule
   \vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 3
+  \begin{tikzpicture}[scale=0.93]      % STEP 3
     \node[draw, fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1180,7 +1174,7 @@ determined. This easily allows to test if the maze can be exited.
   \hrule
   %\vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 4
+  \begin{tikzpicture}[scale=0.93]      % STEP 4
     \node[draw,semitransparent,fill=orange] at (4, 2) (start) {$\alpha$};
     \node[draw,semitransparent,fill=Orchid,text=white] at (2, 2) (K) {$\beta$};
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1648,9 +1642,9 @@ Checking emptiness of the intersection of \emph{two} context-free
 languages is undecidable (this enables the simulation of an arbitrary Turing
 machine). Therefore, it could very well be that trying to get out of \emph{two}
 recursive mazes simultaneously might be difficult. This problem can be thought
-of as follows: suppose you have an application to play recursive mazes
-(\verb|\begin{shameless-advertisement}|such as the one we designed, available at
-  \url{https://github.com/orelcosseron/Fractal-Maze-Python}\verb|\end{shameless-advertisement}|). In
+of as follows: suppose you have an application to play recursive mazes\footnote{
+Such as the one we designed, available at
+  \url{https://github.com/orelcosseron/Fractal-Maze-Python}.}. In
 such a game, the mazes are orthogonal: paths are either horizontal or
 vertical. The player controls the location of a sprite using arrow keys, as is
 common in ``top down'' adventure games, such as \emph{The Legend of
@@ -1685,7 +1679,7 @@ perspective for future work.
 \begin{center}
   \tikzset{every node/.style={font=\scriptsize}}
 
-  \begin{tikzpicture}[scale=1]       % initial graph
+  \begin{tikzpicture}[scale=0.98]       % initial graph
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1724,7 +1718,7 @@ perspective for future work.
   \vspace{0.25cm}
 
   
-  \begin{tikzpicture}[scale=1]       % STEP 0
+  \begin{tikzpicture}[scale=0.98]       % STEP 0
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1766,7 +1760,7 @@ perspective for future work.
   \hrule
   \vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 1
+  \begin{tikzpicture}[scale=0.98]      % STEP 1
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 2.5);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1812,7 +1806,7 @@ perspective for future work.
   \hrule
   \vspace{0.25cm}
 
-  \begin{tikzpicture}[scale=1]      % STEP 2 (new)
+  \begin{tikzpicture}[scale=0.98]      % STEP 2 (new)
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.125);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1868,7 +1862,7 @@ perspective for future work.
   \hrule
   \vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 3
+  \begin{tikzpicture}[scale=0.98]      % STEP 3
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.125);
     
    \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
@@ -1929,7 +1923,7 @@ perspective for future work.
   \hrule
   %\vspace{0.25cm}
   
-  \begin{tikzpicture}[scale=1]      % STEP 4 (final)
+  \begin{tikzpicture}[scale=0.98]      % STEP 4 (final)
     \path[use as bounding box] (-2.5, -0.25) rectangle (11.5, 3.25);
 
     \node[draw,fill=red,text=white] at (0, 2) (R) {$\gamma$};
